@@ -29,27 +29,27 @@ The platform is built around the idea that **connections should be intelligent, 
 
 ## Key Ideas Behind PendoLink
 
-### 🧠 Intelligent Matching
+### Intelligent Matching
 
 PendoLink leverages advanced matching logic and AI-driven insights to go beyond surface-level attributes. It considers deeper compatibility signals to recommend connections that are more likely to succeed.
 
-### 💬 Real-Time Interaction
+### Real-Time Interaction
 
 Seamless communication is enabled through integrated real-time chat, allowing users to move from matching to meaningful conversation without friction.
 
-### 📊 Behavioral Understanding
+### Behavioral Understanding
 
 The platform learns from user activity and preferences to continuously improve match quality and personalize the experience.
 
-### 🔒 Trust, Safety & Moderation
+### Trust, Safety & Moderation
 
 Built-in moderation and permission systems help maintain a safe and respectful environment, addressing a major weakness in many existing platforms.
 
-### 📍 Context-Aware Connections
+### Context-Aware Connections
 
 By incorporating user context such as location and preferences, PendoLink enhances relevance in matchmaking.
 
-### 💼 Scalable & Future-Ready
+### Scalable & Future-Ready
 
 Designed with extensibility in mind, the platform supports analytics, billing, notifications, and AI modules — enabling growth into a full-scale digital ecosystem.
 

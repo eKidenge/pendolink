@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Methods - PendoLink{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="text-center" data-aos="fade-down">
+        <h1 class="text-3xl font-bold gradient-text mb-2">Payment Methods</h1>
+        <p class="text-gray-600">Manage your payment options</p>
+    </div>
+    
+    <!-- Saved Payment Methods -->
+    <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-gray-800">Saved Payment Methods</h2>
+            <button onclick="addPaymentMethod()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                <i class="fas fa-plus mr-2"></i> Add New
+            </button>
+        </div>
+        
+        <div class="space-y-3">
+            {% for method in payment_methods %}
+            <div class="flex items-center justify-between p-4 border rounded-xl hover:shadow-md transition">
+                <div class="flex items-center">
+                    {% if method.type == 'mpesa' %}
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-mobile-alt text-green-600 text-xl"></i>
+                    </div>
+                    {% elif method.type == 'visa' %}
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <i class="fab fa-cc-visa text-blue-600 text-xl"></i>
+                    </div>
+                    {% elif method.type == 'mastercard' %}
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <i class="fab fa-cc-mastercard text-red-600 text-xl"></i>
+                    </div>
+                    {% else %}
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-credit-card text-gray-600 text-xl"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="ml-4">
+                        <p class="font-semibold text-gray-800">{{ method.display_name }}</p>
+                        <p class="text-sm text-gray-500">{{ method.details }}</p>
+                        {% if method.is_default %}
+                        <span class="text-xs text-green-600">Default</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="flex space-x-2">
+                    {% if not method.is_default %}
+                    <button onclick="setDefault({{ method.id }})" class="text-blue-600 text-sm hover:text-blue-800">
+                        Set Default
+                    </button>
+                    {% endif %}
+                    <button onclick="removeMethod({{ method.id }})" class="text-red-600 text-sm hover:text-red-800">
+                        Remove
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-8">
+                <i class="fas fa-credit-card text-4xl text-gray-300 mb-3"></i>
+                <p class="text-gray-500">No saved payment methods</p>
+                <button onclick="addPaymentMethod()" class="mt-3 text-purple-600">Add your first payment method</button>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Add M-Pesa -->
+    <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Add M-Pesa Number</h2>
+        <p class="text-gray-600 text-sm mb-4">Securely store your M-Pesa number for faster payments</p>
+        
+        <form id="mpesa-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">M-Pesa Phone Number</label>
+                <div class="flex">
+                    <span class="inline-flex items-center px-3 bg-gray-100 border border-r-0 border-gray-300 rounded-l-xl text-gray-600">+254</span>
+                    <input type="tel" name="phone_number" pattern="[0-9]{9}" placeholder="712345678" required
+                           class="flex-1 px-4 py-2 border border-gray-300 rounded-r-xl focus:outline-none focus:border-purple-500">
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Enter 9-digit phone number without country code</p>
+            </div>
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                <i class="fas fa-save mr-2"></i> Save M-Pesa Number
+            </button>
+        </form>
+    </div>
+    
+    <!-- Add Card -->
+    <div class="bg-white rounded-2xl shadow-lg p-6" data-aos="fade-up">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Add Credit/Debit Card</h2>
+        <p class="text-gray-600 text-sm mb-4">Secure payment with Stripe</p>
+        
+        <form id="card-form" class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Card Number</label>
+                <input type="text" name="card_number" placeholder="4242 4242 4242 4242" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Expiry Date</label>
+                    <input type="text" name="expiry" placeholder="MM/YY" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">CVC</label>
+                    <input type="text" name="cvc" placeholder="123" required
+                           class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                </div>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Cardholder Name</label>
+                <input type="text" name="cardholder_name" placeholder="John Doe" required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+            </div>
+            
+            <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">
+                <i class="fas fa-plus-circle mr-2"></i> Add Card
+            </button>
+        </form>
+    </div>
+    
+    <!-- Security Note -->
+    <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-6 text-center" data-aos="fade-up">
+        <i class="fas fa-lock text-purple-600 text-3xl mb-3"></i>
+        <h3 class="font-semibold text-gray-800 mb-2">Secure Payment Processing</h3>
+        <p class="text-sm text-gray-600">
+            Your payment information is encrypted and secure. We never store full card details on our servers.
+            All payments are processed through PCI-compliant payment gateways.
+        </p>
+    </div>
+</div>
+
+<!-- Add Payment Method Modal -->
+<div id="add-method-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 slide-in">
+        <h3 class="text-2xl font-bold mb-4">Add Payment Method</h3>
+        <div class="space-y-3">
+            <button onclick="selectMethod('mpesa')" class="w-full flex items-center justify-between p-4 border-2 rounded-xl hover:border-purple-600 transition">
+                <div class="flex items-center">
+                    <i class="fas fa-mobile-alt text-2xl text-green-600 mr-3"></i>
+                    <div class="text-left">
+                        <p class="font-semibold">M-Pesa</p>
+                        <p class="text-sm text-gray-500">Pay with mobile money</p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400"></i>
+            </button>
+            
+            <button onclick="selectMethod('card')" class="w-full flex items-center justify-between p-4 border-2 rounded-xl hover:border-purple-600 transition">
+                <div class="flex items-center">
+                    <i class="fas fa-credit-card text-2xl text-blue-600 mr-3"></i>
+                    <div class="text-left">
+                        <p class="font-semibold">Credit/Debit Card</p>
+                        <p class="text-sm text-gray-500">Visa, Mastercard, Amex</p>
+                    </div>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400"></i>
+            </button>
+        </div>
+        <button onclick="closeMethodModal()" class="w-full mt-4 py-2 text-gray-600 hover:text-gray-800">
+            Cancel
+        </button>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// M-Pesa Form
+document.getElementById('mpesa-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const phoneNumber = this.querySelector('input[name="phone_number"]').value;
+    
+    showLoading();
+    fetch('/api/payments/add-mpesa/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ phone_number: phoneNumber })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showNotification('success', 'M-Pesa number saved successfully');
+            setTimeout(() => location.reload(), 1500);
+        }
+    });
+});
+
+// Card Form
+document.getElementById('card-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const cardData = {
+        card_number: this.querySelector('input[name="card_number"]').value,
+        expiry: this.querySelector('input[name="expiry"]').value,
+        cvc: this.querySelector('input[name="cvc"]').value,
+        cardholder_name: this.querySelector('input[name="cardholder_name"]').value
+    };
+    
+    showLoading();
+    fetch('/api/payments/add-card/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(cardData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showNotification('success', 'Card added successfully');
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            showNotification('error', data.error || 'Failed to add card');
+        }
+    });
+});
+
+function addPaymentMethod() {
+    const modal = document.getElementById('add-method-modal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+function closeMethodModal() {
+    const modal = document.getElementById('add-method-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function selectMethod(method) {
+    closeMethodModal();
+    if (method === 'mpesa') {
+        document.getElementById('mpesa-form').scrollIntoView({ behavior: 'smooth' });
+    } else {
+        document.getElementById('card-form').scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+function setDefault(methodId) {
+    showLoading();
+    fetch(`/api/payments/set-default/${methodId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+
+function removeMethod(methodId) {
+    if (confirm('Remove this payment method?')) {
+        showLoading();
+        fetch(`/api/payments/remove-method/${methodId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

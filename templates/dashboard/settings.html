@@ -1,0 +1,411 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - PendoLink{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden" data-aos="fade-up">
+        <div class="border-b border-gray-200">
+            <nav class="flex space-x-8 px-6">
+                <button class="settings-tab py-4 px-1 border-b-2 border-purple-600 text-purple-600 font-semibold" data-tab="account">
+                    Account Settings
+                </button>
+                <button class="settings-tab py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="privacy">
+                    Privacy & Security
+                </button>
+                <button class="settings-tab py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="notifications">
+                    Notifications
+                </button>
+                <button class="settings-tab py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-tab="billing">
+                    Billing
+                </button>
+            </nav>
+        </div>
+        
+        <!-- Account Settings Tab -->
+        <div id="account-tab" class="settings-content p-6">
+            <form method="POST" action="{% url 'update-account' %}">
+                {% csrf_token %}
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Change Password</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Current Password</label>
+                                <input type="password" name="current_password" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                <input type="password" name="new_password" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                                <input type="password" name="confirm_password" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Email Preferences</h3>
+                        <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <p class="font-medium">Receive marketing emails</p>
+                                <p class="text-sm text-gray-500">Get updates about new features and offers</p>
+                            </div>
+                            <input type="checkbox" name="marketing_emails" {% if user.settings.marketing_emails %}checked{% endif %} 
+                                   class="toggle-switch">
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-xl">Save Changes</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Privacy Tab -->
+        <div id="privacy-tab" class="settings-content hidden p-6">
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Profile Visibility</h3>
+                    <div class="space-y-3">
+                        <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <p class="font-medium">Show my profile in discovery</p>
+                                <p class="text-sm text-gray-500">When disabled, you won't appear in other users' discover feed</p>
+                            </div>
+                            <input type="checkbox" name="visible" {% if user.settings.visible %}checked{% endif %} 
+                                   class="toggle-switch" onchange="updateVisibility(this)">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <p class="font-medium">Show my distance</p>
+                                <p class="text-sm text-gray-500">Display approximate distance to other users</p>
+                            </div>
+                            <input type="checkbox" name="show_distance" {% if user.settings.show_distance %}checked{% endif %} 
+                                   class="toggle-switch">
+                        </label>
+                        
+                        <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                            <div>
+                                <p class="font-medium">Show my online status</p>
+                                <p class="text-sm text-gray-500">Let others know when you're active</p>
+                            </div>
+                            <input type="checkbox" name="show_online" {% if user.settings.show_online %}checked{% endif %} 
+                                   class="toggle-switch">
+                        </label>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Blocked Users</h3>
+                    <div class="space-y-2">
+                        {% for blocked in blocked_users %}
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center">
+                                <img src="{{ blocked.profile_picture|default:'https://via.placeholder.com/32' }}" class="w-8 h-8 rounded-full">
+                                <span class="ml-3">{{ blocked.username }}</span>
+                            </div>
+                            <button onclick="unblockUser({{ blocked.id }})" class="text-red-600 text-sm">Unblock</button>
+                        </div>
+                        {% empty %}
+                        <p class="text-gray-500 text-center py-4">No blocked users</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Data Export -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold mb-4">Data & Privacy</h3>
+                    <button onclick="exportData()" class="bg-gray-600 text-white px-6 py-2 rounded-xl">
+                        Download My Data
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notifications Tab -->
+        <div id="notifications-tab" class="settings-content hidden p-6">
+            <div class="space-y-4">
+                <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div>
+                        <p class="font-medium">Push Notifications</p>
+                        <p class="text-sm text-gray-500">Get notifications on your device</p>
+                    </div>
+                    <input type="checkbox" name="push_notifications" {% if user.settings.push_notifications %}checked{% endif %} 
+                           class="toggle-switch">
+                </label>
+                
+                <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div>
+                        <p class="font-medium">New Match Alerts</p>
+                        <p class="text-sm text-gray-500">Get notified when you match with someone</p>
+                    </div>
+                    <input type="checkbox" name="match_alerts" {% if user.settings.match_alerts %}checked{% endif %} 
+                           class="toggle-switch">
+                </label>
+                
+                <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div>
+                        <p class="font-medium">Message Notifications</p>
+                        <p class="text-sm text-gray-500">Get notified when you receive a message</p>
+                    </div>
+                    <input type="checkbox" name="message_alerts" {% if user.settings.message_alerts %}checked{% endif %} 
+                           class="toggle-switch">
+                </label>
+                
+                <label class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                    <div>
+                        <p class="font-medium">Weekly Digest</p>
+                        <p class="text-sm text-gray-500">Receive weekly summary of your activity</p>
+                    </div>
+                    <input type="checkbox" name="weekly_digest" {% if user.settings.weekly_digest %}checked{% endif %} 
+                           class="toggle-switch">
+                </label>
+            </div>
+        </div>
+        
+        <!-- Billing Tab -->
+        <div id="billing-tab" class="settings-content hidden p-6">
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Current Plan</h3>
+                    <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 text-white">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-purple-100">Current Subscription</p>
+                                <p class="text-2xl font-bold">
+                                    {% if user.is_premium %}Premium{% else %}Free{% endif %}
+                                </p>
+                                {% if user.premium_until %}
+                                <p class="text-sm text-purple-100 mt-1">Renews on {{ user.premium_until|date:"F j, Y" }}</p>
+                                {% endif %}
+                            </div>
+                            {% if not user.is_premium %}
+                            <a href="{% url 'subscription' %}" class="bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg">
+                                Upgrade
+                            </a>
+                            {% else %}
+                            <button onclick="cancelSubscription()" class="bg-red-500 text-white px-4 py-2 rounded-lg">
+                                Cancel
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Methods -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Payment Methods</h3>
+                    <div class="space-y-3">
+                        {% for payment_method in payment_methods %}
+                        <div class="flex items-center justify-between p-4 border rounded-xl">
+                            <div class="flex items-center">
+                                <i class="fab {% if payment_method.type == 'mpesa' %}fa-cc-mpesa{% elif payment_method.type == 'visa' %}fa-cc-visa{% else %}fa-credit-card{% endif %} text-2xl text-gray-600 mr-3"></i>
+                                <div>
+                                    <p class="font-medium">{{ payment_method.display_name }}</p>
+                                    <p class="text-sm text-gray-500">{{ payment_method.details }}</p>
+                                </div>
+                            </div>
+                            <button onclick="removePaymentMethod({{ payment_method.id }})" class="text-red-600 text-sm">Remove</button>
+                        </div>
+                        {% endfor %}
+                        
+                        <button onclick="addPaymentMethod()" class="w-full border-2 border-dashed border-gray-300 rounded-xl p-4 text-purple-600 hover:border-purple-500">
+                            <i class="fas fa-plus mr-2"></i> Add Payment Method
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Billing History -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Billing History</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-sm">Date</th>
+                                    <th class="px-4 py-2 text-left text-sm">Description</th>
+                                    <th class="px-4 py-2 text-right text-sm">Amount</th>
+                                    <th class="px-4 py-2 text-center text-sm">Status</th>
+                                    <th class="px-4 py-2 text-center text-sm">Invoice</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for transaction in transactions %}
+                                <tr class="border-b">
+                                    <td class="px-4 py-3 text-sm">{{ transaction.created_at|date:"Y-m-d" }}</td>
+                                    <td class="px-4 py-3 text-sm">{{ transaction.description }}</td>
+                                    <td class="px-4 py-3 text-sm text-right">KES {{ transaction.amount }}</td>
+                                    <td class="px-4 py-3 text-center">
+                                        <span class="text-xs px-2 py-1 rounded-full {% if transaction.status == 'completed' %}bg-green-100 text-green-600{% else %}bg-red-100 text-red-600{% endif %}">
+                                            {{ transaction.status }}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-center">
+                                        <button onclick="downloadInvoice({{ transaction.id }})" class="text-purple-600 text-sm">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center py-8 text-gray-500">No transactions yet</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.toggle-switch {
+    position: relative;
+    width: 48px;
+    height: 24px;
+    appearance: none;
+    background: #ccc;
+    border-radius: 24px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.toggle-switch:checked {
+    background: #7C3AED;
+}
+
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: 2px;
+    left: 4px;
+    background: white;
+    transition: all 0.3s;
+}
+
+.toggle-switch:checked::before {
+    left: 24px;
+}
+</style>
+
+{% block extra_js %}
+<script>
+// Tab switching
+document.querySelectorAll('.settings-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        
+        // Update tab styles
+        document.querySelectorAll('.settings-tab').forEach(t => {
+            t.classList.remove('border-purple-600', 'text-purple-600');
+            t.classList.add('border-transparent', 'text-gray-500');
+        });
+        tab.classList.add('border-purple-600', 'text-purple-600');
+        tab.classList.remove('border-transparent', 'text-gray-500');
+        
+        // Show content
+        document.querySelectorAll('.settings-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+    });
+});
+
+function updateVisibility(checkbox) {
+    fetch('/api/settings/update-visibility/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ visible: checkbox.checked })
+    });
+}
+
+function unblockUser(userId) {
+    if (confirm('Unblock this user?')) {
+        showLoading();
+        fetch(`/api/settings/unblock/${userId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+
+function exportData() {
+    showLoading();
+    fetch('/api/settings/export-data/')
+        .then(response => response.blob())
+        .then(blob => {
+            hideLoading();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'pendolink-data.json';
+            a.click();
+        });
+}
+
+function cancelSubscription() {
+    if (confirm('Are you sure you want to cancel your subscription?')) {
+        showLoading();
+        fetch('/api/payments/cancel-subscription/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+
+function addPaymentMethod() {
+    // Implement payment method addition
+    alert('Payment method addition coming soon');
+}
+
+function removePaymentMethod(methodId) {
+    if (confirm('Remove this payment method?')) {
+        fetch(`/api/payments/remove-method/${methodId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+
+function downloadInvoice(transactionId) {
+    window.location.href = `/api/payments/invoice/${transactionId}/`;
+}
+</script>
+{% endblock %}
+{% endblock %}

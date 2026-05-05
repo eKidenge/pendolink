@@ -1,0 +1,691 @@
+{% extends 'base.html' %}
+
+{% block title %}Advanced Analytics - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       ADVANCED ANALYTICS PREMIUM STYLING - VERY SERIOUS & PROFESSIONAL
+       ================================================================== */
+    
+    /* Header card premium styling */
+    .header-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1.5rem !important;
+    }
+    
+    .header-card h1 {
+        color: #e6b87e !important;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    /* Date range select */
+    .date-select {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #f0f3fc !important;
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .date-select:focus {
+        border-color: #e6b87e !important;
+        box-shadow: 0 0 0 3px rgba(230, 184, 126, 0.15);
+        outline: none;
+    }
+    
+    /* Export button */
+    .btn-export-analytics {
+        background: linear-gradient(115deg, #10b981, #059669) !important;
+        color: white !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 1rem !important;
+    }
+    
+    .btn-export-analytics:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+    }
+    
+    /* Metric cards premium styling */
+    .metric-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1.5rem !important;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .metric-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(230, 190, 110, 0.4);
+        box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.4);
+    }
+    
+    .metric-label {
+        color: #9aaec9 !important;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    .metric-value {
+        color: #e6b87e !important;
+        font-size: 1.875rem;
+        font-weight: 700;
+    }
+    
+    .metric-trend-positive {
+        color: #10b981 !important;
+    }
+    
+    .metric-trend-negative {
+        color: #ef4444 !important;
+    }
+    
+    .metric-icon {
+        background: rgba(230, 184, 126, 0.15) !important;
+        border: 1px solid rgba(230, 190, 110, 0.3);
+    }
+    
+    /* Chart containers */
+    .chart-container {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1.5rem !important;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .chart-container:hover {
+        border-color: rgba(230, 190, 110, 0.3);
+    }
+    
+    .chart-container h3 {
+        color: #e6b87e !important;
+        font-weight: 600;
+        border-left: 3px solid #e6b87e;
+        padding-left: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    /* Engagement metrics cards */
+    .engagement-card {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .engagement-card:hover {
+        border-color: rgba(230, 190, 110, 0.3);
+        transform: scale(1.02);
+    }
+    
+    .engagement-card .engagement-value {
+        color: #e6b87e !important;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    /* Table premium styling */
+    .analytics-table-container {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1.5rem !important;
+        overflow: hidden;
+    }
+    
+    .analytics-table {
+        width: 100%;
+    }
+    
+    .analytics-table thead {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border-bottom: 1px solid rgba(230, 190, 110, 0.15);
+    }
+    
+    .analytics-table th {
+        color: #e6b87e !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+    }
+    
+    .analytics-table td {
+        border-bottom: 1px solid rgba(230, 190, 110, 0.08);
+        color: #cbdaea;
+    }
+    
+    .analytics-table tr {
+        transition: all 0.3s ease;
+    }
+    
+    .analytics-table tr:hover {
+        background: rgba(230, 184, 126, 0.05) !important;
+    }
+    
+    /* AI Performance cards */
+    .ai-card {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .ai-card:hover {
+        border-color: rgba(230, 190, 110, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .ai-card .ai-value {
+        color: #e6b87e !important;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .metric-value {
+            font-size: 1.25rem;
+        }
+        
+        .engagement-card .engagement-value {
+            font-size: 1.1rem;
+        }
+        
+        .chart-container canvas {
+            max-height: 250px;
+        }
+    }
+    
+    /* Loading state */
+    .loading-placeholder {
+        background: rgba(2, 8, 18, 0.5);
+        border-radius: 1rem;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Chart.js custom styling */
+    canvas {
+        max-height: 300px;
+        width: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="header-card rounded-2xl p-6">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold mb-2">Advanced Analytics</h1>
+                <p class="text-gray-400 mt-1">Deep insights into platform performance</p>
+            </div>
+            <div class="flex space-x-3">
+                <select id="date-range" class="date-select px-4 py-2 rounded-xl">
+                    <option value="7">Last 7 days</option>
+                    <option value="30" selected>Last 30 days</option>
+                    <option value="90">Last 90 days</option>
+                    <option value="365">Last year</option>
+                </select>
+                <button onclick="exportAnalytics()" class="btn-export-analytics px-4 py-2 rounded-xl transition">
+                    <i class="fas fa-download mr-2"></i> Export Report
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Key Metrics -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="metric-card rounded-2xl p-6" data-aos="fade-up">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="metric-label">User Growth Rate</p>
+                    <p class="metric-value" id="growth-rate">-</p>
+                    <p class="text-xs mt-1" id="growth-trend">Loading...</p>
+                </div>
+                <div class="metric-icon w-12 h-12 rounded-full flex items-center justify-center">
+                    <i class="fas fa-chart-line text-premium text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="metric-card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="metric-label">Match Conversion Rate</p>
+                    <p class="metric-value" id="match-rate">-</p>
+                    <p class="text-xs mt-1" id="match-trend">Loading...</p>
+                </div>
+                <div class="metric-icon w-12 h-12 rounded-full flex items-center justify-center">
+                    <i class="fas fa-handshake text-premium text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="metric-card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="metric-label">Retention Rate (30d)</p>
+                    <p class="metric-value" id="retention-rate">-</p>
+                    <p class="text-xs text-gray-500 mt-1">Users returning after 30 days</p>
+                </div>
+                <div class="metric-icon w-12 h-12 rounded-full flex items-center justify-center">
+                    <i class="fas fa-users text-premium text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="metric-card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="metric-label">LTV (Customer Value)</p>
+                    <p class="metric-value" id="ltv">-</p>
+                    <p class="text-xs text-gray-500 mt-1">Average per user</p>
+                </div>
+                <div class="metric-icon w-12 h-12 rounded-full flex items-center justify-center">
+                    <i class="fas fa-dollar-sign text-premium text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Row 1 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="chart-container rounded-2xl" data-aos="fade-up">
+            <h3 class="text-lg font-semibold">User Acquisition Channels</h3>
+            <canvas id="acquisitionChart" height="280"></canvas>
+        </div>
+        
+        <div class="chart-container rounded-2xl" data-aos="fade-up">
+            <h3 class="text-lg font-semibold">User Demographics</h3>
+            <canvas id="demographicsChart" height="280"></canvas>
+        </div>
+    </div>
+    
+    <!-- Charts Row 2 -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="chart-container rounded-2xl" data-aos="fade-up">
+            <h3 class="text-lg font-semibold">Match Success Rate by Location</h3>
+            <canvas id="locationMatchChart" height="280"></canvas>
+        </div>
+        
+        <div class="chart-container rounded-2xl" data-aos="fade-up">
+            <h3 class="text-lg font-semibold">AI Matching Performance</h3>
+            <canvas id="aiPerformanceChart" height="280"></canvas>
+        </div>
+    </div>
+    
+    <!-- Engagement Metrics -->
+    <div class="chart-container rounded-2xl" data-aos="fade-up">
+        <h3 class="text-lg font-semibold">User Engagement Metrics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+            <div class="engagement-card text-center p-4 rounded-xl">
+                <p class="text-gray-400 text-sm">Avg Session Duration</p>
+                <p class="engagement-value" id="avg-session">-</p>
+            </div>
+            <div class="engagement-card text-center p-4 rounded-xl">
+                <p class="text-gray-400 text-sm">Actions per Session</p>
+                <p class="engagement-value" id="actions-per-session">-</p>
+            </div>
+            <div class="engagement-card text-center p-4 rounded-xl">
+                <p class="text-gray-400 text-sm">Daily Active Users (DAU)</p>
+                <p class="engagement-value" id="dau">-</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Locations Table -->
+    <div class="analytics-table-container rounded-2xl p-6" data-aos="fade-up">
+        <h3 class="text-lg font-semibold text-premium mb-4">Top Performing Locations</h3>
+        <div class="overflow-x-auto">
+            <table class="analytics-table w-full">
+                <thead>
+                    <tr>
+                        <th class="px-4 py-3 text-left">Location</th>
+                        <th class="px-4 py-3 text-right">Active Users</th>
+                        <th class="px-4 py-3 text-right">Matches</th>
+                        <th class="px-4 py-3 text-right">Match Rate</th>
+                        <th class="px-4 py-3 text-right">Revenue</th>
+                    </tr>
+                </thead>
+                <tbody id="locations-table">
+                    <tr>
+                        <td colspan="5" class="text-center py-8 text-gray-400">Loading locations data...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- AI Model Performance -->
+    <div class="chart-container rounded-2xl" data-aos="fade-up">
+        <h3 class="text-lg font-semibold">AI Model Performance Metrics</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+            <div class="ai-card text-center p-4 rounded-xl">
+                <p class="text-gray-400 text-sm">Precision</p>
+                <p class="ai-value" id="ai-precision">-</p>
+            </div>
+            <div class="ai-card text-center p-4 rounded-xl">
+                <p class="text-gray-400 text-sm">Recall</p>
+                <p class="ai-value" id="ai-recall">-</p>
+            </div>
+            <div class="ai-card text-center p-4 rounded-xl">
+                <p class="text-gray-400 text-sm">F1 Score</p>
+                <p class="ai-value" id="ai-f1">-</p>
+            </div>
+            <div class="ai-card text-center p-4 rounded-xl">
+                <p class="text-gray-400 text-sm">Recommendation CTR</p>
+                <p class="ai-value" id="ai-ctr">-</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let acquisitionChart, demographicsChart, locationMatchChart, aiPerformanceChart;
+
+// Load analytics data
+function loadAnalytics() {
+    const days = document.getElementById('date-range').value;
+    
+    showLoading();
+    fetch(`/admin/api/analytics/advanced/?days=${days}`)
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            updateMetrics(data.metrics);
+            updateCharts(data);
+            updateLocationsTable(data.top_locations);
+        })
+        .catch(error => {
+            hideLoading();
+            console.error('Error loading analytics:', error);
+        });
+}
+
+function updateMetrics(metrics) {
+    // Growth rate
+    document.getElementById('growth-rate').textContent = `${metrics.growth_rate}%`;
+    const growthTrend = document.getElementById('growth-trend');
+    growthTrend.innerHTML = `${metrics.growth_trend > 0 ? '↑' : '↓'} ${Math.abs(metrics.growth_trend)}% from last period`;
+    growthTrend.className = `text-xs mt-1 ${metrics.growth_trend > 0 ? 'metric-trend-positive' : 'metric-trend-negative'}`;
+    
+    // Match rate
+    document.getElementById('match-rate').textContent = `${metrics.match_rate}%`;
+    const matchTrend = document.getElementById('match-trend');
+    matchTrend.innerHTML = `${metrics.match_trend > 0 ? '↑' : '↓'} ${Math.abs(metrics.match_trend)}% from last period`;
+    matchTrend.className = `text-xs mt-1 ${metrics.match_trend > 0 ? 'metric-trend-positive' : 'metric-trend-negative'}`;
+    
+    // Other metrics
+    document.getElementById('retention-rate').textContent = `${metrics.retention_rate}%`;
+    document.getElementById('ltv').textContent = `KES ${metrics.ltv.toLocaleString()}`;
+    document.getElementById('avg-session').textContent = `${metrics.avg_session_minutes} min`;
+    document.getElementById('actions-per-session').textContent = metrics.actions_per_session;
+    document.getElementById('dau').textContent = metrics.dau.toLocaleString();
+    
+    // AI Metrics
+    document.getElementById('ai-precision').textContent = `${metrics.ai_precision}%`;
+    document.getElementById('ai-recall').textContent = `${metrics.ai_recall}%`;
+    document.getElementById('ai-f1').textContent = `${metrics.ai_f1}%`;
+    document.getElementById('ai-ctr').textContent = `${metrics.ai_ctr}%`;
+}
+
+function updateCharts(data) {
+    // Acquisition Chart - Doughnut
+    if (acquisitionChart) acquisitionChart.destroy();
+    const acquisitionCtx = document.getElementById('acquisitionChart').getContext('2d');
+    acquisitionChart = new Chart(acquisitionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: data.acquisition.labels,
+            datasets: [{
+                data: data.acquisition.values,
+                backgroundColor: ['#e6b87e', '#10B981', '#F59E0B', '#EF4444', '#3B82F6', '#8B5CF6'],
+                borderWidth: 0,
+                hoverOffset: 10
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#cbdaea' }
+                },
+                tooltip: {
+                    backgroundColor: '#1a1a3e',
+                    titleColor: '#e6b87e',
+                    bodyColor: '#cbdaea',
+                    borderColor: '#e6b87e',
+                    borderWidth: 1
+                }
+            }
+        }
+    });
+    
+    // Demographics Chart - Bar
+    if (demographicsChart) demographicsChart.destroy();
+    const demographicsCtx = document.getElementById('demographicsChart').getContext('2d');
+    demographicsChart = new Chart(demographicsCtx, {
+        type: 'bar',
+        data: {
+            labels: data.demographics.age_ranges,
+            datasets: [{
+                label: 'Male',
+                data: data.demographics.male,
+                backgroundColor: '#3B82F6',
+                borderRadius: 8,
+                barPercentage: 0.7
+            }, {
+                label: 'Female',
+                data: data.demographics.female,
+                backgroundColor: '#EC4899',
+                borderRadius: 8,
+                barPercentage: 0.7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#cbdaea' }
+                },
+                tooltip: {
+                    backgroundColor: '#1a1a3e',
+                    titleColor: '#e6b87e',
+                    bodyColor: '#cbdaea'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(203, 218, 234, 0.1)' },
+                    ticks: { color: '#cbdaea' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#cbdaea' }
+                }
+            }
+        }
+    });
+    
+    // Location Match Chart
+    if (locationMatchChart) locationMatchChart.destroy();
+    const locationCtx = document.getElementById('locationMatchChart').getContext('2d');
+    locationMatchChart = new Chart(locationCtx, {
+        type: 'bar',
+        data: {
+            labels: data.location_matches.labels,
+            datasets: [{
+                label: 'Match Rate (%)',
+                data: data.location_matches.values,
+                backgroundColor: '#e6b87e',
+                borderRadius: 8,
+                barPercentage: 0.6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#cbdaea' }
+                },
+                tooltip: {
+                    backgroundColor: '#1a1a3e',
+                    titleColor: '#e6b87e',
+                    bodyColor: '#cbdaea',
+                    callbacks: {
+                        label: function(context) {
+                            return `Match Rate: ${context.raw}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: { color: 'rgba(203, 218, 234, 0.1)' },
+                    ticks: { color: '#cbdaea' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#cbdaea' }
+                }
+            }
+        }
+    });
+    
+    // AI Performance Chart - Line
+    if (aiPerformanceChart) aiPerformanceChart.destroy();
+    const aiCtx = document.getElementById('aiPerformanceChart').getContext('2d');
+    aiPerformanceChart = new Chart(aiCtx, {
+        type: 'line',
+        data: {
+            labels: data.ai_performance.dates,
+            datasets: [{
+                label: 'Precision',
+                data: data.ai_performance.precision,
+                borderColor: '#e6b87e',
+                backgroundColor: 'transparent',
+                tension: 0.4,
+                fill: false,
+                pointBackgroundColor: '#e6b87e',
+                pointBorderColor: '#1a1a3e',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }, {
+                label: 'Recall',
+                data: data.ai_performance.recall,
+                borderColor: '#10B981',
+                backgroundColor: 'transparent',
+                tension: 0.4,
+                fill: false,
+                pointBackgroundColor: '#10B981',
+                pointBorderColor: '#1a1a3e',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }, {
+                label: 'F1 Score',
+                data: data.ai_performance.f1,
+                borderColor: '#F59E0B',
+                backgroundColor: 'transparent',
+                tension: 0.4,
+                fill: false,
+                pointBackgroundColor: '#F59E0B',
+                pointBorderColor: '#1a1a3e',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#cbdaea' }
+                },
+                tooltip: {
+                    backgroundColor: '#1a1a3e',
+                    titleColor: '#e6b87e',
+                    bodyColor: '#cbdaea',
+                    callbacks: {
+                        label: function(context) {
+                            return `${context.dataset.label}: ${context.raw}%`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    grid: { color: 'rgba(203, 218, 234, 0.1)' },
+                    ticks: { color: '#cbdaea' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#cbdaea' }
+                }
+            }
+        }
+    });
+}
+
+function updateLocationsTable(locations) {
+    const tbody = document.getElementById('locations-table');
+    if (!locations || locations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8 text-gray-400">No location data available</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = locations.map(loc => `
+        <tr class="border-b border-gray-800 transition hover:bg-gray-800">
+            <td class="px-4 py-3 font-medium text-premium">${loc.town}, ${loc.city}</td>
+            <td class="px-4 py-3 text-right text-gray-300">${loc.active_users.toLocaleString()}</td>
+            <td class="px-4 py-3 text-right text-gray-300">${loc.matches.toLocaleString()}</td>
+            <td class="px-4 py-3 text-right">
+                <span class="text-green-400">${loc.match_rate}%</span>
+            </td>
+            <td class="px-4 py-3 text-right text-premium">KES ${loc.revenue.toLocaleString()}</td>
+        </tr>
+    `).join('');
+}
+
+function exportAnalytics() {
+    const days = document.getElementById('date-range').value;
+    window.location.href = `/admin/api/analytics/export/?days=${days}`;
+}
+
+// Initial load
+loadAnalytics();
+
+// Auto-refresh every 5 minutes
+setInterval(loadAnalytics, 300000);
+</script>
+{% endblock %}
+{% endblock %}

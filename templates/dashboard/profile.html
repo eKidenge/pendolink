@@ -1,0 +1,707 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile - PendoLink{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       MY PROFILE PREMIUM STYLING - VERY SERIOUS & PROFESSIONAL
+       ================================================================== */
+    
+    /* Profile header premium styling */
+    .profile-header {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1.5rem !important;
+        overflow: hidden;
+    }
+    
+    /* Cover photo area */
+    .cover-area {
+        background: linear-gradient(135deg, #1a1a3e, #0f0f1a) !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cover-area::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357, #e6b87e);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    @keyframes shimmerHeader {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+    
+    .cover-btn {
+        background: rgba(15, 20, 35, 0.9) !important;
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .cover-btn:hover {
+        background: rgba(230, 184, 126, 0.2) !important;
+        transform: scale(1.05);
+    }
+    
+    /* Profile picture */
+    .profile-pic-container {
+        border: 4px solid #e6b87e;
+        border-radius: 9999px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
+    .change-photo-btn {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .change-photo-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    /* Edit button */
+    .edit-profile-btn {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .edit-profile-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.3);
+    }
+    
+    /* Username styling */
+    .profile-username {
+        color: #e6b87e !important;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    /* Badges */
+    .badge-verified {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: #3b82f6 !important;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    .badge-premium {
+        background: rgba(230, 184, 126, 0.15) !important;
+        color: #e6b87e !important;
+        border: 1px solid rgba(230, 184, 126, 0.3);
+    }
+    
+    /* Compatibility score circle */
+    .score-circle {
+        filter: drop-shadow(0 0 5px rgba(230, 184, 126, 0.3));
+    }
+    
+    .score-text {
+        color: #e6b87e !important;
+    }
+    
+    /* Section cards */
+    .profile-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1.5rem !important;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .profile-card:hover {
+        border-color: rgba(230, 190, 110, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .card-title {
+        color: #e6b87e !important;
+        border-left: 3px solid #e6b87e;
+        padding-left: 1rem;
+    }
+    
+    /* Interest tags */
+    .interest-tag {
+        background: rgba(230, 184, 126, 0.15) !important;
+        color: #e6b87e !important;
+        border: 1px solid rgba(230, 184, 126, 0.3);
+        border-radius: 9999px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .interest-tag:hover {
+        background: rgba(230, 184, 126, 0.25) !important;
+        transform: translateY(-2px);
+    }
+    
+    /* Personality trait bars */
+    .trait-bar-bg {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border-radius: 9999px;
+        overflow: hidden;
+    }
+    
+    .trait-bar-fill {
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3) !important;
+        height: 0.5rem;
+        border-radius: 9999px;
+    }
+    
+    /* Photos grid */
+    .photo-grid-item {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .photo-grid-item:hover {
+        border-color: #e6b87e;
+        transform: scale(1.02);
+    }
+    
+    .photo-overlay {
+        background: rgba(15, 20, 35, 0.8);
+        backdrop-filter: blur(4px);
+        transition: all 0.3s ease;
+    }
+    
+    .photo-delete-btn {
+        background: #ef4444 !important;
+        transition: all 0.3s ease;
+    }
+    
+    .photo-delete-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .primary-badge {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+    }
+    
+    .upload-btn {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 2px dashed rgba(200, 165, 100, 0.45) !important;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-btn:hover {
+        border-color: #e6b87e !important;
+        background: rgba(230, 184, 126, 0.1) !important;
+    }
+    
+    /* Activity stats card */
+    .stats-card {
+        background: linear-gradient(135deg, #1a1a3e, #0f0f1a) !important;
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    .stats-value {
+        color: #e6b87e !important;
+    }
+    
+    .upgrade-btn {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 700;
+        transition: all 0.3s ease;
+    }
+    
+    .upgrade-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.4);
+    }
+    
+    /* Modal premium styling */
+    .modal-premium {
+        background: rgba(15, 20, 35, 0.98) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem !important;
+    }
+    
+    .modal-close {
+        background: rgba(15, 20, 35, 0.9);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+        background: rgba(230, 184, 126, 0.2);
+        transform: scale(1.05);
+    }
+    
+    /* Upload area */
+    .upload-area {
+        border: 2px dashed rgba(200, 165, 100, 0.45) !important;
+        background: rgba(2, 8, 18, 0.5) !important;
+        transition: all 0.3s ease;
+    }
+    
+    .upload-area:hover {
+        border-color: #e6b87e !important;
+        background: rgba(230, 184, 126, 0.05) !important;
+    }
+    
+    .select-photo-btn {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .profile-header {
+            text-align: center;
+        }
+        
+        .profile-pic-container {
+            margin: 0 auto;
+        }
+        
+        .edit-profile-btn {
+            margin-top: 1rem;
+        }
+        
+        .profile-username {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Profile Header -->
+    <div class="profile-header rounded-2xl overflow-hidden" data-aos="fade-up">
+        <div class="relative">
+            <!-- Cover Photo -->
+            <div class="cover-area h-48 relative">
+                <div class="absolute inset-0 bg-black opacity-20"></div>
+                {% if user.profile.cover_photo %}
+                <img src="{{ user.profile.cover_photo.url }}" alt="Cover" class="w-full h-full object-cover">
+                {% endif %}
+                <button onclick="changeCoverPhoto()" class="cover-btn absolute bottom-4 right-4 rounded-full p-2 shadow-lg transition">
+                    <i class="fas fa-camera text-premium"></i>
+                </button>
+            </div>
+            
+            <!-- Profile Picture -->
+            <div class="absolute -bottom-16 left-8">
+                <div class="relative">
+                    <img src="{{ user.profile.profile_picture.url|default:'https://via.placeholder.com/128' }}" 
+                         alt="{{ user.username }}"
+                         class="profile-pic-container w-32 h-32 rounded-full object-cover">
+                    <button onclick="changeProfilePhoto()" class="change-photo-btn absolute bottom-0 right-0 rounded-full p-1.5 text-white transition">
+                        <i class="fas fa-camera text-xs"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Edit Button -->
+            <div class="absolute top-4 right-4">
+                <a href="{% url 'edit-profile' %}" class="edit-profile-btn px-4 py-2 rounded-xl shadow-lg transition inline-flex items-center">
+                    <i class="fas fa-edit mr-2"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+        
+        <!-- Profile Info -->
+        <div class="pt-20 pb-6 px-8">
+            <div class="flex flex-wrap justify-between items-start gap-4">
+                <div>
+                    <h1 class="profile-username text-3xl font-bold">{{ user.username }}</h1>
+                    <div class="flex flex-wrap items-center gap-2 mt-1">
+                        <span class="text-gray-400">{{ user.age }} years</span>
+                        <span class="text-gray-600">•</span>
+                        <span class="text-gray-400">
+                            <i class="fas fa-map-marker-alt mr-1"></i> {{ user.location.city }}, {{ user.location.town }}
+                        </span>
+                        {% if user.is_verified %}
+                        <span class="badge-verified text-xs px-2 py-1 rounded-full">
+                            <i class="fas fa-check-circle mr-1"></i> Verified
+                        </span>
+                        {% endif %}
+                        {% if user.is_premium %}
+                        <span class="badge-premium text-xs px-2 py-1 rounded-full">
+                            <i class="fas fa-crown mr-1"></i> Premium
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Compatibility Score -->
+                <div class="text-center">
+                    <div class="relative w-20 h-20">
+                        <svg class="w-20 h-20 transform -rotate-90">
+                            <circle cx="40" cy="40" r="36" stroke="rgba(203, 218, 234, 0.2)" stroke-width="3" fill="none"/>
+                            <circle cx="40" cy="40" r="36" stroke="#e6b87e" stroke-width="3" fill="none"
+                                    stroke-dasharray="{{ compatibility_circle }}" stroke-linecap="round"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="score-text text-xl font-bold">{{ compatibility_score }}%</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">Overall Score</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Sections -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Column -->
+        <div class="lg:col-span-2 space-y-6">
+            <!-- About Me -->
+            <div class="profile-card rounded-2xl p-6" data-aos="fade-up">
+                <h2 class="card-title text-xl font-bold mb-4">
+                    <i class="fas fa-user-circle mr-2 text-premium"></i> About Me
+                </h2>
+                <p class="text-gray-300 leading-relaxed">{{ user.profile.bio|default:"No bio provided yet. Tell others about yourself!" }}</p>
+                
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <div>
+                        <p class="text-sm text-gray-500">Occupation</p>
+                        <p class="font-medium text-gray-300">{{ user.profile.occupation|default:"Not specified" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Education</p>
+                        <p class="font-medium text-gray-300">{{ user.profile.education|default:"Not specified" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Height</p>
+                        <p class="font-medium text-gray-300">{{ user.profile.height|default:"Not specified" }} cm</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Religion</p>
+                        <p class="font-medium text-gray-300">{{ user.profile.religion|default:"Not specified" }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Interests -->
+            <div class="profile-card rounded-2xl p-6" data-aos="fade-up">
+                <h2 class="card-title text-xl font-bold mb-4">
+                    <i class="fas fa-heart mr-2 text-premium"></i> Interests & Hobbies
+                </h2>
+                <div class="flex flex-wrap gap-2">
+                    {% for interest in user.profile.interests %}
+                    <span class="interest-tag text-sm font-medium">
+                        <i class="fas fa-tag mr-1"></i> {{ interest }}
+                    </span>
+                    {% empty %}
+                    <p class="text-gray-500">No interests added yet</p>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Personality Traits -->
+            <div class="profile-card rounded-2xl p-6" data-aos="fade-up">
+                <h2 class="card-title text-xl font-bold mb-4">
+                    <i class="fas fa-chart-line mr-2 text-premium"></i> Personality Traits
+                </h2>
+                <div class="space-y-4">
+                    {% for trait, score in user.profile.personality_traits.items %}
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium text-gray-300">{{ trait|title }}</span>
+                            <span class="text-sm text-premium">{{ score }}%</span>
+                        </div>
+                        <div class="trait-bar-bg w-full rounded-full h-2">
+                            <div class="trait-bar-fill rounded-full" style="width: {{ score }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="space-y-6">
+            <!-- Photos -->
+            <div class="profile-card rounded-2xl p-6" data-aos="fade-up">
+                <h2 class="card-title text-xl font-bold mb-4">
+                    <i class="fas fa-images mr-2 text-premium"></i> Photos
+                </h2>
+                <div class="grid grid-cols-2 gap-2">
+                    {% for photo in user.photos %}
+                    <div class="photo-grid-item relative group">
+                        <img src="{{ photo.image.url }}" alt="User photo" class="w-full h-32 object-cover rounded-lg">
+                        <div class="photo-overlay absolute inset-0 bg-opacity-0 group-hover:bg-opacity-50 transition flex items-center justify-center opacity-0 group-hover:opacity-100 rounded-lg">
+                            <button onclick="deletePhoto({{ photo.id }})" class="photo-delete-btn text-white p-1 rounded-full transition">
+                                <i class="fas fa-trash text-sm"></i>
+                            </button>
+                        </div>
+                        {% if photo.is_primary %}
+                        <span class="primary-badge absolute top-1 right-1 text-xs px-1 rounded">Primary</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button onclick="uploadPhoto()" class="upload-btn w-full h-32 rounded-lg flex items-center justify-center transition">
+                        <i class="fas fa-plus text-gray-400 text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Dating Preferences -->
+            <div class="profile-card rounded-2xl p-6" data-aos="fade-up">
+                <h2 class="card-title text-xl font-bold mb-4">
+                    <i class="fas fa-filter mr-2 text-premium"></i> Dating Preferences
+                </h2>
+                <div class="space-y-3">
+                    <div>
+                        <p class="text-sm text-gray-500">Looking for</p>
+                        <p class="font-medium text-gray-300">{{ user.looking_for|default:"Not specified" }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Age range</p>
+                        <p class="font-medium text-gray-300">{{ user.profile.age_min }} - {{ user.profile.age_max }} years</p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Maximum distance</p>
+                        <p class="font-medium text-gray-300">{{ user.profile.distance_max }} km</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Account Stats -->
+            <div class="stats-card rounded-2xl p-6 text-white" data-aos="fade-up">
+                <h3 class="font-bold text-premium text-lg mb-4">Your Activity</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Profile Views</span>
+                        <span class="stats-value font-bold">{{ user.profile.profile_views }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Likes Received</span>
+                        <span class="stats-value font-bold">{{ user.likes_received_count }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Matches</span>
+                        <span class="stats-value font-bold">{{ user.matches_count }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-400">Response Rate</span>
+                        <span class="stats-value font-bold">{{ user.response_rate }}%</span>
+                    </div>
+                </div>
+                
+                {% if not user.is_premium %}
+                <div class="mt-6 pt-6 border-t border-gray-700">
+                    <a href="{% url 'subscription' %}" class="upgrade-btn block text-center py-2 rounded-xl font-semibold transition">
+                        Upgrade to Premium
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Photo Upload Modal -->
+<div id="photo-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden items-center justify-center">
+    <div class="modal-premium rounded-2xl max-w-md w-full p-6">
+        <h3 class="text-2xl font-bold text-premium mb-4">Upload Photo</h3>
+        <form id="photo-upload-form" enctype="multipart/form-data">
+            <div class="upload-area rounded-xl p-8 text-center">
+                <i class="fas fa-cloud-upload-alt text-4xl text-gray-500 mb-3"></i>
+                <p class="text-gray-400">Click or drag to upload</p>
+                <input type="file" id="photo-input" name="photo" accept="image/*" class="hidden" onchange="previewPhoto(this)">
+                <button type="button" onclick="document.getElementById('photo-input').click()" class="select-photo-btn mt-3 px-4 py-2 rounded-lg transition">
+                    Select Photo
+                </button>
+            </div>
+            <div id="photo-preview" class="mt-4 hidden">
+                <img id="preview-img" class="w-full rounded-lg border border-premium">
+            </div>
+            <div class="flex space-x-3 mt-6">
+                <button type="submit" class="flex-1 btn-premium py-2 rounded-xl font-semibold transition">Upload</button>
+                <button type="button" onclick="closePhotoModal()" class="flex-1 btn-cancel py-2 rounded-xl font-semibold transition">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+let currentPhotoId = null;
+
+function changeProfilePhoto() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('photo', file);
+        formData.append('is_primary', 'true');
+        
+        showLoading();
+        fetch('/api/profiles/upload-photo/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                location.reload();
+            } else {
+                showNotification('error', data.error || 'Upload failed');
+            }
+        });
+    };
+    input.click();
+}
+
+function changeCoverPhoto() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        const formData = new FormData();
+        formData.append('cover_photo', file);
+        
+        showLoading();
+        fetch('/api/profiles/update-cover/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                location.reload();
+            } else {
+                showNotification('error', data.error || 'Upload failed');
+            }
+        });
+    };
+    input.click();
+}
+
+function uploadPhoto() {
+    document.getElementById('photo-modal').classList.remove('hidden');
+    document.getElementById('photo-modal').classList.add('flex');
+}
+
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+            document.getElementById('photo-preview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.getElementById('photo-upload-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    
+    showLoading();
+    fetch('/api/profiles/upload-photo/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            location.reload();
+        } else {
+            showNotification('error', data.error || 'Upload failed');
+        }
+    });
+});
+
+function deletePhoto(photoId) {
+    if (confirm('Are you sure you want to delete this photo?')) {
+        showLoading();
+        fetch(`/api/profiles/delete-photo/${photoId}/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+
+function closePhotoModal() {
+    document.getElementById('photo-modal').classList.add('hidden');
+    document.getElementById('photo-modal').classList.remove('flex');
+}
+
+function showNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 right-4 z-50 rounded-lg shadow-xl p-4 max-w-md slide-in border-l-4 transition-all duration-300 ${
+        type === 'success' ? 'border-green-500' : 'border-red-500'
+    }`;
+    notification.style.background = 'rgba(15, 20, 35, 0.95)';
+    notification.style.backdropFilter = 'blur(12px)';
+    notification.style.border = `1px solid rgba(230, 190, 110, 0.2)`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle text-green-500' : 'fa-exclamation-circle text-red-500'} mr-3 text-lg"></i>
+            <p class="text-sm text-gray-200">${message}</p>
+            <button class="ml-auto text-gray-400 hover:text-gray-300 transition" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+}
+</script>
+{% endblock %}
+{% endblock %}

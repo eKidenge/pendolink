@@ -1,0 +1,553 @@
+{% extends 'base.html' %}
+
+{% block title %}Join PendoLink - Find Your Perfect Match{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       REGISTRATION PAGE PREMIUM STYLING - MATCHING LOGIN PAGE
+       ================================================================== */
+    
+    /* Form container premium styling */
+    .max-w-2xl {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        box-shadow: 0 35px 60px -15px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05) inset !important;
+    }
+    
+    /* Header gradient - premium gold/purple - CENTERED */
+    .bg-gradient-to-r {
+        background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%) !important;
+        border-bottom: 2px solid rgba(230, 190, 110, 0.4);
+        position: relative;
+        overflow: hidden;
+        text-align: center !important;
+    }
+    
+    .bg-gradient-to-r::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357, #e6b87e);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    @keyframes shimmerHeader {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+    
+    /* Form titles - CENTERED */
+    .bg-gradient-to-r h2 {
+        font-family: 'Playfair Display', serif;
+        letter-spacing: -0.5px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        text-align: center !important;
+    }
+    
+    .bg-gradient-to-r p {
+        color: #e6b87e !important;
+        font-weight: 500;
+        text-align: center !important;
+    }
+    
+    /* Step indicators premium styling */
+    .step div:first-child {
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-weight: 700;
+    }
+    
+    .step.active div:first-child {
+        background: linear-gradient(135deg, #e6b87e, #dba357) !important;
+        box-shadow: 0 0 15px rgba(230, 184, 126, 0.4);
+        transform: scale(1.05);
+    }
+    
+    .step span {
+        transition: all 0.3s ease;
+    }
+    
+    .step.active span {
+        color: #e6b87e !important;
+        font-weight: 600;
+    }
+    
+    /* Input fields premium styling */
+    input, select, textarea {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        border-radius: 1rem !important;
+        color: #f0f3fc !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        font-size: 0.95rem;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+        border-color: #e6b87e !important;
+        background: rgba(5, 12, 24, 0.9) !important;
+        box-shadow: 0 0 0 4px rgba(230, 184, 126, 0.15), 0 0 0 1px #e6b87e inset !important;
+        outline: none;
+    }
+    
+    input:hover, select:hover, textarea:hover {
+        border-color: rgba(230, 184, 126, 0.7) !important;
+    }
+    
+    input::placeholder, textarea::placeholder {
+        color: #7c8fae !important;
+    }
+    
+    /* Labels premium styling */
+    label {
+        color: #cbdaea !important;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+    
+    /* Checkbox styling */
+    input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #e6b87e;
+        cursor: pointer;
+    }
+    
+    input[type="checkbox"]:hover {
+        transform: scale(1.05);
+    }
+    
+    /* Interest labels styling */
+    .flex.items-center.space-x-2 {
+        transition: all 0.3s ease;
+        border-radius: 0.75rem;
+        padding: 0.5rem;
+    }
+    
+    .flex.items-center.space-x-2:hover {
+        background: rgba(230, 184, 126, 0.1) !important;
+        transform: translateX(4px);
+    }
+    
+    /* Buttons premium styling */
+    #prevBtn {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #e6b87e !important;
+        transition: all 0.3s ease;
+        border-radius: 1rem !important;
+        font-weight: 600;
+    }
+    
+    #prevBtn:hover {
+        background: rgba(230, 184, 126, 0.15) !important;
+        border-color: #e6b87e !important;
+        transform: translateX(-2px);
+    }
+    
+    #nextBtn {
+        background: linear-gradient(115deg, #e8bc7c, #c68944, #e0aa64) !important;
+        border: none !important;
+        color: #0a0f1c !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border-radius: 1rem !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    #nextBtn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 245, 200, 0.4), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    #nextBtn:hover::before {
+        left: 100%;
+    }
+    
+    #nextBtn:hover {
+        transform: translateX(2px);
+        box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.4);
+    }
+    
+    #submitBtn {
+        background: linear-gradient(115deg, #10b981, #059669, #047857) !important;
+        border: none !important;
+        color: white !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border-radius: 1rem !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    #submitBtn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    #submitBtn:hover::before {
+        left: 100%;
+    }
+    
+    #submitBtn:hover {
+        transform: scale(1.02);
+        box-shadow: 0 10px 25px -8px rgba(16, 185, 129, 0.4);
+    }
+    
+    /* File upload area styling */
+    .border-2.border-dashed {
+        border: 2px dashed rgba(200, 165, 100, 0.45) !important;
+        background: rgba(2, 8, 18, 0.5) !important;
+        transition: all 0.3s ease;
+    }
+    
+    .border-2.border-dashed:hover {
+        border-color: #e6b87e !important;
+        background: rgba(230, 184, 126, 0.05) !important;
+    }
+    
+    /* Terms links */
+    .text-purple-600 {
+        color: #e6b87e !important;
+        transition: all 0.2s ease;
+        position: relative;
+        text-decoration: none;
+    }
+    
+    .text-purple-600::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3);
+        transition: width 0.3s ease;
+    }
+    
+    .text-purple-600:hover::after {
+        width: 100%;
+    }
+    
+    /* Photo preview styling */
+    #photo-preview {
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    
+    #preview-img {
+        border: 3px solid #e6b87e;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* Step content animations */
+    .step-content {
+        animation: slideIn 0.4s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    /* Make step indicators container justified and centered */
+    .flex.justify-between.mb-8 {
+        justify-content: space-around !important;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .max-w-2xl {
+            margin: 1rem;
+        }
+        
+        .grid-cols-1.md\:grid-cols-2 {
+            gap: 1rem;
+        }
+        
+        .flex.justify-between.mb-8 {
+            gap: 0.5rem;
+        }
+    }
+    
+    /* Dark mode support for form */
+    @media (prefers-color-scheme: dark) {
+        .step span {
+            color: #9ca3af;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center py-12 px-4">
+    <div class="max-w-2xl w-full rounded-2xl shadow-2xl overflow-hidden" data-aos="fade-up">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-8 py-6">
+            <h2 class="text-2xl font-bold text-white">Create your account</h2>
+            <p class="text-purple-100 mt-1">Join thousands finding meaningful connections</p>
+        </div>
+        
+        <form method="POST" action="{% url 'register_submit' %}" class="p-8 space-y-6" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Display errors -->
+{% if errors %}
+<div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4">
+    <ul class="list-disc list-inside">
+        {% for field, error in errors.items %}
+        <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+            
+            <!-- Progress Steps -->
+            <div class="flex justify-between mb-8">
+                <div class="step active flex-1 text-center">
+                    <div class="w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center mx-auto mb-2">1</div>
+                    <span class="text-xs text-gray-600">Basic Info</span>
+                </div>
+                <div class="step flex-1 text-center">
+                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mx-auto mb-2">2</div>
+                    <span class="text-xs text-gray-400">Profile</span>
+                </div>
+                <div class="step flex-1 text-center">
+                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mx-auto mb-2">3</div>
+                    <span class="text-xs text-gray-400">Interests</span>
+                </div>
+            </div>
+            
+            <!-- Step 1: Basic Information -->
+            <div class="step-content active" id="step1">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                        <input type="text" name="username" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="email" name="email" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                        <input type="tel" name="phone_number" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+                        <input type="date" name="date_of_birth" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+                        <select name="gender" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                            <option value="M">Male</option>
+                            <option value="F">Female</option>
+                            <option value="O">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Looking for</label>
+                        <select name="looking_for" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                            <option value="M">Men</option>
+                            <option value="F">Women</option>
+                            <option value="O">Everyone</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" name="password" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Confirm Password</label>
+                        <input type="password" name="password2" required 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2: Profile Details -->
+            <div class="step-content hidden" id="step2">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+                        <textarea name="bio" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-xl"
+                                  placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Occupation</label>
+                            <input type="text" name="occupation" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Education</label>
+                            <input type="text" name="education" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">City</label>
+                            <input type="text" name="city" required class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Town</label>
+                            <input type="text" name="town" required class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Profile Photo</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center">
+                            <input type="file" name="profile_picture" accept="image/*" onchange="previewPhoto(this)">
+                            <div id="photo-preview" class="mt-2 hidden">
+                                <img id="preview-img" class="w-32 h-32 rounded-full mx-auto object-cover">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3: Interests -->
+            <div class="step-content hidden" id="step3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-4">Select your interests</label>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {% for interest in interests %}
+                        <label class="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                            <input type="checkbox" name="interests" value="{{ interest.id }}" class="rounded border-gray-300">
+                            <span class="text-sm">{{ interest.name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">How did you hear about us?</label>
+                    <select name="referral_source" class="w-full px-4 py-2 border border-gray-300 rounded-xl">
+                        <option value="">Select an option</option>
+                        <option value="friend">Friend referral</option>
+                        <option value="social">Social media</option>
+                        <option value="ad">Advertisement</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between pt-4">
+                <button type="button" id="prevBtn" onclick="changeStep(-1)" class="px-6 py-2 border border-gray-300 rounded-xl text-gray-600 hidden">
+                    <i class="fas fa-arrow-left mr-2"></i> Previous
+                </button>
+                <button type="button" id="nextBtn" onclick="changeStep(1)" class="px-6 py-2 bg-purple-600 text-white rounded-xl ml-auto">
+                    Next <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+                <button type="submit" id="submitBtn" class="px-6 py-2 bg-green-600 text-white rounded-xl hidden">
+                    <i class="fas fa-check-circle mr-2"></i> Create Account
+                </button>
+            </div>
+            
+            <p class="text-center text-sm text-gray-600 mt-6">
+                By signing up, you agree to our 
+                <a href="#" class="text-purple-600">Terms of Service</a> and 
+                <a href="#" class="text-purple-600">Privacy Policy</a>
+            </p>
+        </form>
+    </div>
+</div>
+
+<script>
+// ORIGINAL FUNCTIONS - COMPLETELY UNCHANGED
+let currentStep = 1;
+const totalSteps = 3;
+
+function changeStep(delta) {
+    // Hide current step
+    document.getElementById(`step${currentStep}`).classList.add('hidden');
+    
+    // Update step
+    currentStep += delta;
+    
+    // Show new step
+    document.getElementById(`step${currentStep}`).classList.remove('hidden');
+    
+    // Update step indicators
+    document.querySelectorAll('.step').forEach((step, index) => {
+        if (index + 1 === currentStep) {
+            step.classList.add('active');
+            step.querySelector('div').classList.add('bg-purple-600', 'text-white');
+            step.querySelector('div').classList.remove('bg-gray-300', 'text-gray-600');
+            step.querySelector('span').classList.remove('text-gray-400');
+            step.querySelector('span').classList.add('text-gray-600');
+        } else {
+            step.classList.remove('active');
+            step.querySelector('div').classList.remove('bg-purple-600', 'text-white');
+            step.querySelector('div').classList.add('bg-gray-300', 'text-gray-600');
+            step.querySelector('span').classList.add('text-gray-400');
+            step.querySelector('span').classList.remove('text-gray-600');
+        }
+    });
+    
+    // Update buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    if (currentStep === 1) {
+        prevBtn.classList.add('hidden');
+    } else {
+        prevBtn.classList.remove('hidden');
+    }
+    
+    if (currentStep === totalSteps) {
+        nextBtn.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+    } else {
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+    }
+}
+
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-img').src = e.target.result;
+            document.getElementById('photo-preview').classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+{% endblock %}

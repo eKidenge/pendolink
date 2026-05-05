@@ -1,0 +1,530 @@
+{% extends 'base.html' %}
+
+{% block title %}My Matches - PendoLink{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       MY MATCHES PREMIUM STYLING - VERY SERIOUS & PROFESSIONAL
+       ================================================================== */
+    
+    /* Header styling */
+    .matches-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .matches-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #e6b87e, #f7d5a3, #dba357);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.5rem;
+    }
+    
+    .matches-subtitle {
+        color: #9aaec9;
+    }
+    
+    /* Tabs premium styling */
+    .tabs-container {
+        border-bottom: 1px solid rgba(230, 190, 110, 0.2);
+    }
+    
+    .tab-btn {
+        background: transparent !important;
+        color: #9aaec9 !important;
+        border-bottom: 2px solid transparent !important;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        padding: 0.75rem 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .tab-btn:hover {
+        color: #e6b87e !important;
+    }
+    
+    .tab-btn.active {
+        color: #e6b87e !important;
+        border-bottom-color: #e6b87e !important;
+    }
+    
+    .tab-badge {
+        background: rgba(230, 184, 126, 0.15) !important;
+        color: #e6b87e !important;
+        border-radius: 9999px;
+        padding: 0.125rem 0.5rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    /* Match card premium styling */
+    .match-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1.5rem !important;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .match-card:hover {
+        transform: translateY(-6px);
+        border-color: rgba(230, 190, 110, 0.4);
+        box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Card header */
+    .match-card-header {
+        background: linear-gradient(135deg, rgba(230, 184, 126, 0.1), rgba(15, 20, 35, 0.5)) !important;
+        padding: 1rem;
+        position: relative;
+    }
+    
+    .match-avatar {
+        width: 5rem;
+        height: 5rem;
+        border-radius: 9999px;
+        object-fit: cover;
+        border: 3px solid #e6b87e;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .match-username {
+        color: #e6b87e !important;
+        font-weight: 700;
+        font-size: 1.25rem;
+    }
+    
+    .match-location {
+        color: #9aaec9 !important;
+        font-size: 0.75rem;
+    }
+    
+    .compatibility-badge {
+        background: rgba(230, 184, 126, 0.15) !important;
+        color: #e6b87e !important;
+        border: 1px solid rgba(230, 184, 126, 0.3);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+    
+    /* Match date badge */
+    .match-date-badge {
+        position: absolute;
+        bottom: -0.75rem;
+        left: 1rem;
+        background: rgba(15, 20, 35, 0.95) !important;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+        color: #9aaec9;
+    }
+    
+    .match-date-badge i {
+        color: #e6b87e;
+    }
+    
+    /* Interest tags */
+    .interest-tag {
+        background: rgba(230, 184, 126, 0.1) !important;
+        color: #e6b87e !important;
+        border: 1px solid rgba(230, 184, 126, 0.2);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+        transition: all 0.3s ease;
+    }
+    
+    .interest-tag:hover {
+        background: rgba(230, 184, 126, 0.2) !important;
+        transform: translateY(-2px);
+    }
+    
+    /* Action buttons */
+    .btn-message {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 0.75rem !important;
+    }
+    
+    .btn-message:hover {
+        transform: scale(1.02);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.4);
+    }
+    
+    .btn-profile {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #e6b87e !important;
+        transition: all 0.3s ease;
+        border-radius: 0.75rem !important;
+    }
+    
+    .btn-profile:hover {
+        background: rgba(230, 184, 126, 0.15) !important;
+        border-color: #e6b87e !important;
+        transform: translateY(-2px);
+    }
+    
+    .btn-unmatch {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border: 1.5px solid rgba(239, 68, 68, 0.3) !important;
+        color: #ef4444 !important;
+        transition: all 0.3s ease;
+        border-radius: 0.75rem !important;
+    }
+    
+    .btn-unmatch:hover {
+        background: rgba(239, 68, 68, 0.2) !important;
+        border-color: #ef4444 !important;
+        transform: translateY(-2px);
+    }
+    
+    /* Expired match card */
+    .match-card-expired {
+        background: rgba(15, 20, 35, 0.6) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.1);
+        border-radius: 1.5rem !important;
+        overflow: hidden;
+        opacity: 0.7;
+    }
+    
+    .match-card-expired .match-username {
+        color: #6b7280 !important;
+    }
+    
+    /* Empty state */
+    .empty-state-matches {
+        background: rgba(15, 20, 35, 0.85) !important;
+        border: 1px dashed rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem;
+        padding: 3rem;
+        text-align: center;
+    }
+    
+    .empty-state-matches i {
+        color: #e6b87e;
+        opacity: 0.5;
+    }
+    
+    .empty-state-matches h3 {
+        color: #e6b87e;
+    }
+    
+    .btn-discover {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 0.75rem !important;
+    }
+    
+    .btn-discover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.4);
+    }
+    
+    /* Statistics card */
+    .stats-card-matches {
+        background: linear-gradient(135deg, #1a1a3e, #0f0f1a) !important;
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stats-card-matches::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    @keyframes shimmerHeader {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+    
+    .stats-value {
+        color: #e6b87e !important;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+    
+    .stats-label {
+        color: #9aaec9;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .matches-title {
+            font-size: 1.75rem;
+        }
+        
+        .match-card-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .match-avatar {
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn-message, .btn-profile, .btn-unmatch {
+            padding: 0.5rem;
+            font-size: 0.7rem;
+        }
+        
+        .stats-value {
+            font-size: 1.25rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="matches-header" data-aos="fade-down">
+        <h1 class="matches-title">Your Matches 💑</h1>
+        <p class="matches-subtitle">People who share mutual interest with you</p>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs-container">
+        <nav class="flex space-x-8">
+            <button class="tab-btn active" data-tab="active">
+                <i class="fas fa-heart mr-2"></i> Active Matches
+                <span class="tab-badge ml-2">{{ active_matches|length }}</span>
+            </button>
+            <button class="tab-btn" data-tab="expired">
+                <i class="fas fa-clock mr-2"></i> Expired
+                <span class="tab-badge ml-2">{{ expired_matches|length }}</span>
+            </button>
+        </nav>
+    </div>
+    
+    <!-- Active Matches Tab -->
+    <div id="active-tab" class="tab-content">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for match in active_matches %}
+            <div class="match-card rounded-2xl" data-aos="fade-up">
+                <div class="match-card-header relative">
+                    <div class="flex items-center">
+                        <img src="{{ match.profile_picture|default:'https://via.placeholder.com/80' }}" 
+                             alt="{{ match.username }}" 
+                             class="match-avatar">
+                        <div class="ml-4 flex-1">
+                            <div class="flex flex-wrap justify-between items-start gap-2">
+                                <div>
+                                    <h3 class="match-username font-bold text-xl">{{ match.username }}</h3>
+                                    <p class="match-location text-sm">
+                                        <i class="fas fa-map-marker-alt mr-1"></i> {{ match.age }} years • {{ match.distance }} km away
+                                    </p>
+                                </div>
+                                <span class="compatibility-badge">
+                                    <i class="fas fa-chart-line mr-1"></i> {{ match.compatibility }}% Match
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Match Date Badge -->
+                    <div class="match-date-badge">
+                        <i class="far fa-calendar-alt mr-1"></i>
+                        Matched {{ match.matched_at|timesince }} ago
+                    </div>
+                </div>
+                
+                <div class="p-6 pt-4">
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% for interest in match.common_interests|slice:":4" %}
+                        <span class="interest-tag">
+                            <i class="fas fa-tag mr-1"></i> {{ interest }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <a href="{% url 'chat' match.conversation_id %}" 
+                           class="btn-message flex-1 text-center py-3 rounded-xl font-semibold transition">
+                            <i class="fas fa-comment-dots mr-2"></i> Send Message
+                        </a>
+                        <button onclick="viewProfile({{ match.id }})" 
+                                class="btn-profile px-4 py-3 rounded-xl transition">
+                            <i class="fas fa-user"></i>
+                        </button>
+                        <button onclick="unmatch({{ match.id }})" 
+                                class="btn-unmatch px-4 py-3 rounded-xl transition">
+                            <i class="fas fa-user-slash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state-matches col-span-full">
+                <i class="fas fa-heart-broken text-6xl mb-4 block"></i>
+                <h3 class="text-xl font-semibold mb-2">No active matches yet</h3>
+                <p class="text-gray-400 mb-4">Start liking profiles to find your perfect match!</p>
+                <a href="{% url 'discover' %}" class="btn-discover inline-block px-6 py-2 rounded-xl font-semibold transition">
+                    <i class="fas fa-search mr-2"></i> Discover People
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Expired Matches Tab -->
+    <div id="expired-tab" class="tab-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for match in expired_matches %}
+            <div class="match-card-expired rounded-2xl">
+                <div class="p-4 flex items-center">
+                    <img src="{{ match.profile_picture|default:'https://via.placeholder.com/80' }}" 
+                         alt="{{ match.username }}" 
+                         class="match-avatar opacity-50">
+                    <div class="ml-4">
+                        <h3 class="match-username font-bold text-xl">{{ match.username }}</h3>
+                        <p class="text-gray-500 text-sm">
+                            <i class="fas fa-clock mr-1"></i> Expired {{ match.expired_at|timesince }} ago
+                        </p>
+                        <span class="text-gray-500 text-sm">{{ match.compatibility }}% Match</span>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state-matches col-span-full">
+                <i class="fas fa-check-circle text-6xl mb-4 block"></i>
+                <h3 class="text-xl font-semibold mb-2">No expired matches</h3>
+                <p class="text-gray-400">All your matches are active!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Match Statistics -->
+    <div class="stats-card-matches rounded-2xl p-8" data-aos="fade-up">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-white">Your Match Statistics</h2>
+            <p class="text-premium-bright">How you're doing on PendoLink</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center">
+                <div class="stats-value">{{ total_likes_given }}</div>
+                <div class="stats-label">Likes Sent</div>
+            </div>
+            <div class="text-center">
+                <div class="stats-value">{{ total_likes_received }}</div>
+                <div class="stats-label">Likes Received</div>
+            </div>
+            <div class="text-center">
+                <div class="stats-value">{{ match_rate }}%</div>
+                <div class="stats-label">Match Rate</div>
+            </div>
+            <div class="text-center">
+                <div class="stats-value">{{ avg_response_time }}</div>
+                <div class="stats-label">Avg Response Time</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// Tab switching
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        
+        // Update active states
+        document.querySelectorAll('.tab-btn').forEach(b => {
+            b.classList.remove('active');
+        });
+        btn.classList.add('active');
+        
+        // Show/hide content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        document.getElementById(`${tab}-tab`).classList.remove('hidden');
+    });
+});
+
+function viewProfile(userId) {
+    window.location.href = `/profile/${userId}/`;
+}
+
+function unmatch(matchId) {
+    if (confirm('Are you sure you want to unmatch? This action cannot be undone.')) {
+        showLoading();
+        fetch(`/api/matching/unmatch/${matchId}/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                showNotification('info', 'You have unmatched this user');
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showNotification('error', data.error || 'Failed to unmatch');
+            }
+        })
+        .catch(error => {
+            hideLoading();
+            showNotification('error', 'Network error. Please try again.');
+        });
+    }
+}
+
+function showNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 right-4 z-50 rounded-lg shadow-xl p-4 max-w-md slide-in border-l-4 transition-all duration-300 ${
+        type === 'success' ? 'border-green-500' : type === 'error' ? 'border-red-500' : 'border-premium'
+    }`;
+    notification.style.background = 'rgba(15, 20, 35, 0.95)';
+    notification.style.backdropFilter = 'blur(12px)';
+    notification.style.border = `1px solid rgba(230, 190, 110, 0.2)`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle text-green-500' : type === 'error' ? 'fa-exclamation-circle text-red-500' : 'fa-info-circle text-premium'} mr-3 text-lg"></i>
+            <p class="text-sm text-gray-200">${message}</p>
+            <button class="ml-auto text-gray-400 hover:text-gray-300 transition" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+}
+</script>
+{% endblock %}
+{% endblock %}

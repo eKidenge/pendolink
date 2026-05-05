@@ -1,0 +1,1 @@
+# Permissions app doesn't have URLs, it's imported by other apps

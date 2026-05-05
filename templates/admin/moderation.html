@@ -1,0 +1,882 @@
+{% extends 'base.html' %}
+
+{% block title %}Moderation Queue - PendoLink Admin{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       MODERATION QUEUE PREMIUM STYLING - VERY SERIOUS & PROFESSIONAL
+       ================================================================== */
+    
+    /* Header card premium styling */
+    .header-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1.5rem !important;
+    }
+    
+    .header-card h1 {
+        color: #e6b87e !important;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    /* Refresh button */
+    .btn-refresh {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 1rem !important;
+    }
+    
+    .btn-refresh:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.3);
+    }
+    
+    /* Stats cards */
+    .stat-card-pending {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card-pending:hover {
+        transform: translateY(-3px);
+        background: rgba(239, 68, 68, 0.15) !important;
+    }
+    
+    .stat-card-investigating {
+        background: rgba(245, 158, 11, 0.1) !important;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card-investigating:hover {
+        transform: translateY(-3px);
+        background: rgba(245, 158, 11, 0.15) !important;
+    }
+    
+    .stat-card-resolved {
+        background: rgba(16, 185, 129, 0.1) !important;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card-resolved:hover {
+        transform: translateY(-3px);
+        background: rgba(16, 185, 129, 0.15) !important;
+    }
+    
+    .stat-card-flags {
+        background: rgba(59, 130, 246, 0.1) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card-flags:hover {
+        transform: translateY(-3px);
+        background: rgba(59, 130, 246, 0.15) !important;
+    }
+    
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+    
+    /* Tabs premium styling */
+    .tabs-container {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-bottom: none;
+        border-radius: 1.5rem 1.5rem 0 0;
+    }
+    
+    .mod-tab {
+        background: transparent !important;
+        color: #9aaec9 !important;
+        border-bottom: 2px solid transparent !important;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .mod-tab:hover {
+        color: #e6b87e !important;
+    }
+    
+    .mod-tab.active {
+        color: #e6b87e !important;
+        border-bottom-color: #e6b87e !important;
+    }
+    
+    .tab-badge {
+        background: rgba(230, 184, 126, 0.15) !important;
+        color: #e6b87e !important;
+        border-radius: 9999px;
+        padding: 0.125rem 0.5rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    /* Table containers */
+    .table-container {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-top: none;
+        border-radius: 0 0 1.5rem 1.5rem;
+        overflow: hidden;
+    }
+    
+    .mod-table {
+        width: 100%;
+    }
+    
+    .mod-table thead {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border-bottom: 1px solid rgba(230, 190, 110, 0.15);
+    }
+    
+    .mod-table th {
+        color: #e6b87e !important;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.7rem;
+        letter-spacing: 1px;
+    }
+    
+    .mod-table td {
+        border-bottom: 1px solid rgba(230, 190, 110, 0.08);
+        color: #cbdaea;
+    }
+    
+    .mod-table tr {
+        transition: all 0.3s ease;
+    }
+    
+    .mod-table tr:hover {
+        background: rgba(230, 184, 126, 0.05) !important;
+    }
+    
+    /* User avatar in tables */
+    .table-avatar {
+        border: 2px solid #e6b87e;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 9999px;
+        object-fit: cover;
+    }
+    
+    /* Badge styles */
+    .badge-reason {
+        background: rgba(239, 68, 68, 0.15) !important;
+        color: #ef4444 !important;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    .badge-status-pending {
+        background: rgba(245, 158, 11, 0.15) !important;
+        color: #f59e0b !important;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    
+    .badge-status-investigating {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: #3b82f6 !important;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    
+    .badge-status-resolved {
+        background: rgba(16, 185, 129, 0.15) !important;
+        color: #10b981 !important;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .badge-flag-warning {
+        background: rgba(245, 158, 11, 0.15) !important;
+        color: #f59e0b !important;
+    }
+    
+    .badge-flag-ban {
+        background: rgba(239, 68, 68, 0.15) !important;
+        color: #ef4444 !important;
+    }
+    
+    /* Action buttons */
+    .action-btn-table {
+        background: rgba(2, 8, 18, 0.75);
+        border: 1px solid rgba(200, 165, 100, 0.3);
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    
+    .action-btn-table:hover {
+        transform: scale(1.1);
+    }
+    
+    .action-view { color: #3b82f6; }
+    .action-view:hover { background: rgba(59, 130, 246, 0.15); border-color: #3b82f6; }
+    
+    .action-assign { color: #10b981; }
+    .action-assign:hover { background: rgba(16, 185, 129, 0.15); border-color: #10b981; }
+    
+    .action-remove { color: #ef4444; }
+    .action-remove:hover { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; }
+    
+    /* Pagination */
+    .pagination-container {
+        background: rgba(15, 20, 35, 0.85);
+        border-top: 1px solid rgba(230, 190, 110, 0.1);
+    }
+    
+    .pagination-link {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1px solid rgba(200, 165, 100, 0.3) !important;
+        color: #e6b87e !important;
+        transition: all 0.3s ease;
+    }
+    
+    .pagination-link:hover {
+        background: rgba(230, 184, 126, 0.15) !important;
+        border-color: #e6b87e !important;
+        transform: translateY(-2px);
+    }
+    
+    .pagination-active {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        border: none !important;
+    }
+    
+    /* Modal premium styling */
+    .modal-premium {
+        background: rgba(15, 20, 35, 0.98) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem !important;
+    }
+    
+    .modal-close {
+        background: rgba(15, 20, 35, 0.9);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+        background: rgba(230, 184, 126, 0.2);
+        transform: scale(1.05);
+    }
+    
+    .details-section {
+        background: rgba(230, 184, 126, 0.05) !important;
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1rem;
+    }
+    
+    .profile-section {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1rem;
+    }
+    
+    /* Form elements in modal */
+    .modal-form select, .modal-form textarea, .modal-form input {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #f0f3fc !important;
+        border-radius: 1rem !important;
+    }
+    
+    .modal-form select:focus, .modal-form textarea:focus, .modal-form input:focus {
+        border-color: #e6b87e !important;
+        box-shadow: 0 0 0 3px rgba(230, 184, 126, 0.15);
+        outline: none;
+    }
+    
+    .btn-submit {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 700;
+    }
+    
+    /* Empty state */
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+    }
+    
+    .empty-state i {
+        color: #e6b87e;
+        opacity: 0.5;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stat-value {
+            font-size: 1.25rem;
+        }
+        
+        .mod-table {
+            font-size: 0.875rem;
+        }
+        
+        .mod-table th, .mod-table td {
+            padding: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="header-card rounded-2xl p-6 slide-in">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <h1 class="text-2xl font-bold mb-2">Moderation Queue</h1>
+                <p class="text-gray-400 mt-1">Review reported content and manage user flags</p>
+            </div>
+            <div class="flex space-x-3">
+                <button onclick="refreshQueue()" class="btn-refresh px-4 py-2 rounded-xl transition">
+                    <i class="fas fa-sync-alt mr-2"></i> Refresh
+                </button>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+            <div class="stat-card-pending rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-red-400 text-sm">Pending Reports</p>
+                        <p class="stat-value text-red-400" id="pending-count">{{ pending_count|default:"0" }}</p>
+                    </div>
+                    <i class="fas fa-clock text-red-400 text-2xl"></i>
+                </div>
+            </div>
+            <div class="stat-card-investigating rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-amber-400 text-sm">Investigating</p>
+                        <p class="stat-value text-amber-400" id="investigating-count">{{ investigating_count|default:"0" }}</p>
+                    </div>
+                    <i class="fas fa-search text-amber-400 text-2xl"></i>
+                </div>
+            </div>
+            <div class="stat-card-resolved rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-emerald-400 text-sm">Resolved Today</p>
+                        <p class="stat-value text-emerald-400" id="resolved-count">{{ resolved_today|default:"0" }}</p>
+                    </div>
+                    <i class="fas fa-check-circle text-emerald-400 text-2xl"></i>
+                </div>
+            </div>
+            <div class="stat-card-flags rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-blue-400 text-sm">Active Flags</p>
+                        <p class="stat-value text-blue-400" id="flag-count">{{ active_flags|default:"0" }}</p>
+                    </div>
+                    <i class="fas fa-flag text-blue-400 text-2xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs-container rounded-t-2xl px-6">
+        <nav class="flex space-x-8">
+            <button class="mod-tab py-4 px-1 active" data-tab="reports">
+                <i class="fas fa-flag mr-2"></i> Reports
+                <span id="reports-badge" class="tab-badge ml-2">{{ pending_count|default:"0" }}</span>
+            </button>
+            <button class="mod-tab py-4 px-1" data-tab="flags">
+                <i class="fas fa-ban mr-2"></i> User Flags
+                <span id="flags-badge" class="tab-badge ml-2">{{ active_flags|default:"0" }}</span>
+            </button>
+            <button class="mod-tab py-4 px-1" data-tab="actions">
+                <i class="fas fa-history mr-2"></i> Moderation Actions
+            </button>
+        </nav>
+    </div>
+    
+    <!-- Reports Tab -->
+    <div id="reports-tab" class="tab-content">
+        <div class="table-container rounded-b-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="mod-table w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Reported User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Reported By</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Reason</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for report in reports %}
+                        <tr class="transition">
+                            <td class="px-6 py-4 text-sm text-premium">#{{ report.id }}</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <img src="{{ report.reported_user.profile_picture|default:'https://via.placeholder.com/32' }}" 
+                                         class="table-avatar">
+                                    <div class="ml-3">
+                                        <p class="font-medium text-white">{{ report.reported_user.username }}</p>
+                                        <p class="text-xs text-gray-400">{{ report.reported_user.email }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <img src="{{ report.reported_by.profile_picture|default:'https://via.placeholder.com/32' }}" 
+                                         class="table-avatar">
+                                    <div class="ml-3">
+                                        <p class="font-medium text-white">{{ report.reported_by.username }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="badge-reason">
+                                    {{ report.get_reason_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if report.status == 'pending' %}
+                                <span class="badge-status-pending px-2 py-1 rounded-full text-xs">
+                                    <i class="fas fa-clock mr-1"></i> Pending
+                                </span>
+                                {% elif report.status == 'investigating' %}
+                                <span class="badge-status-investigating px-2 py-1 rounded-full text-xs">
+                                    <i class="fas fa-search mr-1"></i> Investigating
+                                </span>
+                                {% else %}
+                                <span class="badge-status-resolved px-2 py-1 rounded-full text-xs">
+                                    <i class="fas fa-check mr-1"></i> Resolved
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-400">
+                                {{ report.created_at|timesince }} ago
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex space-x-2">
+                                    <button onclick="viewReport({{ report.id }})" class="action-btn-table action-view rounded-lg">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    {% if report.status == 'pending' %}
+                                    <button onclick="assignToMe({{ report.id }})" class="action-btn-table action-assign rounded-lg">
+                                        <i class="fas fa-user-check"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="fas fa-check-circle text-5xl mb-3 block"></i>
+                                <p class="text-gray-400">No reports to review</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if reports.has_other_pages %}
+            <div class="pagination-container px-6 py-4">
+                <div class="flex justify-center space-x-2">
+                    {% if reports.has_previous %}
+                    <a href="?page={{ reports.previous_page_number }}" class="pagination-link px-3 py-1 rounded-lg transition">Previous</a>
+                    {% endif %}
+                    {% for num in reports.paginator.page_range %}
+                        <a href="?page={{ num }}" class="pagination-link px-3 py-1 rounded-lg transition {% if reports.number == num %}pagination-active{% endif %}">
+                            {{ num }}
+                        </a>
+                    {% endfor %}
+                    {% if reports.has_next %}
+                    <a href="?page={{ reports.next_page_number }}" class="pagination-link px-3 py-1 rounded-lg transition">Next</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- User Flags Tab -->
+    <div id="flags-tab" class="tab-content hidden">
+        <div class="table-container rounded-b-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="mod-table w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Flag Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Reason</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Flagged By</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Expires</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="flags-table-body">
+                        {% for flag in user_flags %}
+                        <tr class="transition">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <img src="{{ flag.user.profile_picture|default:'https://via.placeholder.com/32' }}" 
+                                         class="table-avatar">
+                                    <div class="ml-3">
+                                        <p class="font-medium text-white">{{ flag.user.username }}</p>
+                                        <p class="text-xs text-gray-400">{{ flag.user.email }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="badge-flag-warning px-2 py-1 rounded-full text-xs">
+                                    {{ flag.get_flag_type_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-400">{{ flag.reason|truncatechars:50 }}</td>
+                            <td class="px-6 py-4 text-sm text-white">{{ flag.flagged_by.username }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-400">{{ flag.created_at|timesince }} ago</td>
+                            <td class="px-6 py-4 text-sm text-gray-400">
+                                {% if flag.expires_at %}
+                                    {{ flag.expires_at|timesince }} left
+                                {% else %}
+                                    <span class="text-red-400">Permanent</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex space-x-2">
+                                    <button onclick="viewUser({{ flag.user.id }})" class="action-btn-table action-view rounded-lg">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button onclick="removeFlag({{ flag.id }})" class="action-btn-table action-remove rounded-lg">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="fas fa-shield-alt text-5xl mb-3 block"></i>
+                                <p class="text-gray-400">No active user flags</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Moderation Actions Tab -->
+    <div id="actions-tab" class="tab-content hidden">
+        <div class="table-container rounded-b-2xl overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="mod-table w-full">
+                    <thead>
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Action</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Reason</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Moderator</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="actions-table-body">
+                        {% for action in moderation_actions %}
+                        <tr class="transition">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <img src="{{ action.user.profile_picture|default:'https://via.placeholder.com/32' }}" 
+                                         class="table-avatar">
+                                    <div class="ml-3">
+                                        <p class="font-medium text-white">{{ action.user.username }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="badge-flag-warning px-2 py-1 rounded-full text-xs">
+                                    {{ action.get_action_type_display }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-400">{{ action.reason|truncatechars:50 }}</td>
+                            <td class="px-6 py-4 text-sm text-white">{{ action.performed_by.username }}</td>
+                            <td class="px-6 py-4 text-sm text-gray-400">{{ action.created_at|timesince }} ago</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                <i class="fas fa-history text-5xl mb-3 block"></i>
+                                <p class="text-gray-400">No moderation actions recorded</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Report Modal -->
+<div id="review-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden overflow-y-auto">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="modal-premium rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div id="review-content"></div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+let currentReportId = null;
+
+// Tab switching
+document.querySelectorAll('.mod-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const tabName = tab.dataset.tab;
+        
+        document.querySelectorAll('.mod-tab').forEach(t => {
+            t.classList.remove('active');
+        });
+        tab.classList.add('active');
+        
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+    });
+});
+
+function refreshQueue() {
+    location.reload();
+}
+
+function assignToMe(reportId) {
+    showLoading();
+    fetch(`/api/moderation/reports/${reportId}/assign/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.status === 'assigned') {
+            showNotification('success', 'Report assigned to you');
+            location.reload();
+        }
+    });
+}
+
+function viewReport(reportId) {
+    currentReportId = reportId;
+    showLoading();
+    fetch(`/api/moderation/reports/${reportId}/`)
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            const modal = document.getElementById('review-modal');
+            const content = document.getElementById('review-content');
+            
+            content.innerHTML = `
+                <div class="relative p-6">
+                    <button onclick="closeReviewModal()" class="modal-close absolute top-4 right-4 rounded-full p-2 transition z-10">
+                        <i class="fas fa-times text-gray-300 text-xl"></i>
+                    </button>
+                    
+                    <h2 class="text-2xl font-bold text-premium mb-4">Review Report #${data.id}</h2>
+                    
+                    <div class="details-section rounded-xl p-4 mb-6">
+                        <h3 class="font-semibold text-premium mb-3">Report Details</h3>
+                        <div class="space-y-2 text-gray-300">
+                            <p><strong class="text-premium">Reason:</strong> ${data.reason_display}</p>
+                            <p><strong class="text-premium">Reported by:</strong> ${data.reported_by?.username}</p>
+                            <p><strong class="text-premium">Reported user:</strong> ${data.reported_user?.username}</p>
+                            <p><strong class="text-premium">Created:</strong> ${new Date(data.created_at).toLocaleString()}</p>
+                            <p><strong class="text-premium">Description:</strong> ${data.description || 'No description provided'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-section rounded-xl p-4 mb-6">
+                        <h3 class="font-semibold text-premium mb-3">Reported User Profile</h3>
+                        <div class="flex items-center mb-3">
+                            <img src="${data.reported_user?.profile_picture || 'https://via.placeholder.com/60'}" 
+                                 class="table-avatar w-16 h-16 rounded-full object-cover border-2 border-premium">
+                            <div class="ml-3">
+                                <p class="font-bold text-white text-lg">${data.reported_user?.username}</p>
+                                <p class="text-gray-400 text-sm">${data.reported_user?.email}</p>
+                                <p class="text-gray-500 text-xs">Member since: ${new Date(data.reported_user?.created_at).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+                            <div>
+                                <p><strong class="text-premium">Bio:</strong> <span class="text-gray-400">${data.reported_user?.bio || 'No bio'}</span></p>
+                                <p><strong class="text-premium">Location:</strong> <span class="text-gray-400">${data.reported_user?.location?.city || 'N/A'}</span></p>
+                            </div>
+                            <div>
+                                <p><strong class="text-premium">Previous reports:</strong> <span class="text-red-400">${data.reported_user?.report_count || 0} times</span></p>
+                                <p><strong class="text-premium">Status:</strong> <span class="${data.reported_user?.is_active ? 'text-emerald-400' : 'text-red-400'}">${data.reported_user?.is_active ? 'Active' : 'Inactive'}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form id="review-action-form" class="modal-form space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-premium mb-2">Action to take</label>
+                            <select name="action_type" required class="w-full px-4 py-2 rounded-xl">
+                                <option value="">Select action</option>
+                                <option value="warning">Issue Warning</option>
+                                <option value="photo_removed">Remove Photo</option>
+                                <option value="profile_hidden">Hide Profile</option>
+                                <option value="temp_ban">Temporary Ban</option>
+                                <option value="perm_ban">Permanent Ban</option>
+                                <option value="dismiss">Dismiss Report</option>
+                            </select>
+                        </div>
+                        
+                        <div id="duration-field" class="hidden">
+                            <label class="block text-sm font-medium text-premium mb-2">Ban Duration (days)</label>
+                            <input type="number" name="duration_days" class="w-full px-4 py-2 rounded-xl">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-premium mb-2">Resolution Notes</label>
+                            <textarea name="notes" rows="3" class="w-full px-4 py-2 rounded-xl" required></textarea>
+                        </div>
+                        
+                        <div class="flex space-x-3 pt-2">
+                            <button type="submit" class="btn-submit flex-1 py-2 rounded-xl font-semibold transition">Submit Resolution</button>
+                            <button type="button" onclick="closeReviewModal()" class="btn-cancel flex-1 py-2 rounded-xl font-semibold transition">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            const actionSelect = content.querySelector('select[name="action_type"]');
+            const durationField = content.querySelector('#duration-field');
+            
+            actionSelect.addEventListener('change', function() {
+                if (this.value === 'temp_ban') {
+                    durationField.classList.remove('hidden');
+                } else {
+                    durationField.classList.add('hidden');
+                }
+            });
+            
+            const form = content.querySelector('#review-action-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                showLoading();
+                fetch(`/api/moderation/reports/${data.id}/resolve/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action_type: formData.get('action_type'),
+                        duration_days: formData.get('duration_days'),
+                        notes: formData.get('notes')
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    hideLoading();
+                    if (result.status === 'resolved') {
+                        closeReviewModal();
+                        location.reload();
+                    }
+                });
+            });
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        });
+}
+
+function closeReviewModal() {
+    const modal = document.getElementById('review-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+function viewUser(userId) {
+    window.location.href = `/admin-panel/users/?view=${userId}`;
+}
+
+function removeFlag(flagId) {
+    if (confirm('Remove this flag from the user?')) {
+        showLoading();
+        fetch(`/api/moderation/flags/${flagId}/remove/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            if (data.success) {
+                location.reload();
+            }
+        });
+    }
+}
+
+function showNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 right-4 z-50 rounded-lg shadow-xl p-4 max-w-md slide-in border-l-4 transition-all duration-300 ${
+        type === 'success' ? 'border-green-500' : 'border-red-500'
+    }`;
+    notification.style.background = 'rgba(15, 20, 35, 0.95)';
+    notification.style.backdropFilter = 'blur(12px)';
+    notification.style.border = `1px solid rgba(230, 190, 110, 0.2)`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle text-green-500' : 'fa-exclamation-circle text-red-500'} mr-3 text-lg"></i>
+            <p class="text-sm text-gray-200">${message}</p>
+            <button class="ml-auto text-gray-400 hover:text-gray-300 transition" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+}
+</script>
+{% endblock %}
+{% endblock %}

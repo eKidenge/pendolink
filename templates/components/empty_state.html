@@ -1,0 +1,25 @@
+<!-- Empty State Components -->
+<div class="empty-state text-center py-12">
+    <div class="w-24 h-24 mx-auto mb-4">
+        {% if icon == 'matches' %}
+        <i class="fas fa-heart-broken text-6xl text-gray-300"></i>
+        {% elif icon == 'messages' %}
+        <i class="fas fa-comment-slash text-6xl text-gray-300"></i>
+        {% elif icon == 'notifications' %}
+        <i class="fas fa-bell-slash text-6xl text-gray-300"></i>
+        {% elif icon == 'search' %}
+        <i class="fas fa-search text-6xl text-gray-300"></i>
+        {% elif icon == 'users' %}
+        <i class="fas fa-users-slash text-6xl text-gray-300"></i>
+        {% else %}
+        <i class="fas fa-inbox text-6xl text-gray-300"></i>
+        {% endif %}
+    </div>
+    <h3 class="text-xl font-semibold text-gray-600 mb-2">{{ title|default:"Nothing here yet" }}</h3>
+    <p class="text-gray-500 mb-4">{{ message|default:"Check back later for updates" }}</p>
+    {% if action_url and action_text %}
+    <a href="{{ action_url }}" class="inline-flex items-center bg-purple-600 text-white px-6 py-2 rounded-xl hover:bg-purple-700 transition">
+        <i class="fas fa-{{ action_icon|default:'plus' }} mr-2"></i> {{ action_text }}
+    </a>
+    {% endif %}
+</div>

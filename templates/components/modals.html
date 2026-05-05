@@ -1,0 +1,191 @@
+<!-- Report User Modal -->
+<div id="report-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 slide-in">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-bold text-gray-800">Report User</h3>
+            <button onclick="closeReportModal()" class="text-gray-400 hover:text-gray-600">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <form id="report-form">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Reason for reporting</label>
+                    <select name="reason" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:border-purple-500">
+                        <option value="">Select a reason</option>
+                        <option value="fake_profile">Fake Profile</option>
+                        <option value="inappropriate">Inappropriate Content</option>
+                        <option value="harassment">Harassment</option>
+                        <option value="spam">Spam</option>
+                        <option value="underage">Underage User</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Additional details (optional)</label>
+                    <textarea name="description" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-xl"
+                              placeholder="Please provide more information..."></textarea>
+                </div>
+            </div>
+            
+            <div class="flex space-x-3 mt-6">
+                <button type="submit" class="flex-1 bg-red-600 text-white py-2 rounded-xl hover:bg-red-700">
+                    Submit Report
+                </button>
+                <button type="button" onclick="closeReportModal()" class="flex-1 border border-gray-300 text-gray-600 py-2 rounded-xl">
+                    Cancel
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Boost Profile Modal -->
+<div id="boost-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 slide-in">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">Boost Your Profile</h3>
+        <p class="text-gray-600 mb-6">Get featured at the top of discovery feed for more visibility</p>
+        
+        <div class="space-y-3">
+            <button onclick="purchaseBoost(1)" class="w-full flex justify-between items-center p-4 border-2 border-gray-200 rounded-xl hover:border-purple-600 transition">
+                <div>
+                    <p class="font-semibold">1 Hour Boost</p>
+                    <p class="text-sm text-gray-500">Get 2x more profile views</p>
+                </div>
+                <span class="text-xl font-bold text-purple-600">KES 99</span>
+            </button>
+            
+            <button onclick="purchaseBoost(6)" class="w-full flex justify-between items-center p-4 border-2 border-gray-200 rounded-xl hover:border-purple-600 transition">
+                <div>
+                    <p class="font-semibold">6 Hour Boost</p>
+                    <p class="text-sm text-gray-500">Get 3x more profile views</p>
+                </div>
+                <span class="text-xl font-bold text-purple-600">KES 499</span>
+            </button>
+            
+            <button onclick="purchaseBoost(24)" class="w-full flex justify-between items-center p-4 border-2 border-gray-200 rounded-xl hover:border-purple-600 transition">
+                <div>
+                    <p class="font-semibold">24 Hour Boost</p>
+                    <p class="text-sm text-gray-500">Get 5x more profile views</p>
+                </div>
+                <span class="text-xl font-bold text-purple-600">KES 1,499</span>
+            </button>
+        </div>
+        
+        <button onclick="closeBoostModal()" class="w-full mt-4 py-2 text-gray-600 hover:text-gray-800">
+            Cancel
+        </button>
+    </div>
+</div>
+
+<!-- Payment Processing Modal -->
+<div id="payment-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center slide-in">
+        <div class="loader mx-auto mb-4"></div>
+        <h3 class="text-xl font-semibold mb-2">Processing Payment</h3>
+        <p class="text-gray-600">Please wait while we process your payment...</p>
+        <div class="mt-4 text-sm text-gray-500">
+            <i class="fas fa-lock mr-1"></i> Secured by M-Pesa
+        </div>
+    </div>
+</div>
+
+<!-- Success Modal -->
+<div id="success-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center slide-in">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-check text-green-600 text-2xl"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">Success!</h3>
+        <p id="success-message" class="text-gray-600 mb-6">Operation completed successfully</p>
+        <button onclick="closeSuccessModal()" class="bg-purple-600 text-white px-6 py-2 rounded-xl">
+            Continue
+        </button>
+    </div>
+</div>
+
+<script>
+let currentReportUserId = null;
+
+function showReportModal(userId) {
+    currentReportUserId = userId;
+    document.getElementById('report-modal').classList.remove('hidden');
+    document.getElementById('report-modal').classList.add('flex');
+}
+
+function closeReportModal() {
+    document.getElementById('report-modal').classList.add('hidden');
+    document.getElementById('report-modal').classList.remove('flex');
+    document.getElementById('report-form').reset();
+}
+
+document.getElementById('report-form')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    
+    showLoading();
+    fetch(`/api/moderation/reports/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            reported_user: currentReportUserId,
+            reason: formData.get('reason'),
+            description: formData.get('description')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        closeReportModal();
+        showNotification('success', 'Report submitted successfully');
+    });
+});
+
+function showBoostModal() {
+    document.getElementById('boost-modal').classList.remove('hidden');
+    document.getElementById('boost-modal').classList.add('flex');
+}
+
+function closeBoostModal() {
+    document.getElementById('boost-modal').classList.add('hidden');
+    document.getElementById('boost-modal').classList.remove('flex');
+}
+
+function purchaseBoost(hours) {
+    closeBoostModal();
+    document.getElementById('payment-modal').classList.remove('hidden');
+    document.getElementById('payment-modal').classList.add('flex');
+    
+    fetch('/api/payments/boost/purchase/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ duration_hours: hours })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('payment-modal').classList.add('hidden');
+        if (data.success) {
+            showSuccessModal('Your profile has been boosted!');
+        }
+    });
+}
+
+function showSuccessModal(message) {
+    document.getElementById('success-message').textContent = message;
+    document.getElementById('success-modal').classList.remove('hidden');
+    document.getElementById('success-modal').classList.add('flex');
+}
+
+function closeSuccessModal() {
+    document.getElementById('success-modal').classList.add('hidden');
+    document.getElementById('success-modal').classList.remove('flex');
+    location.reload();
+}
+</script>

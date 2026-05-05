@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="description" content="PendoLink - Premium Matchmaking Platform for Meaningful Connections">
+    <meta name="theme-color" content="#e6b87e">
+    <title>PendoLink - Premium Matchmaking Platform</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* ==================================================================
+           PUBLIC DASHBOARD - PREMIUM LANDING PAGE WITH RESPONSIVE NAV
+           ================================================================== */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at 20% 30%, #0a0e1a 0%, #02040c 100%);
+            min-height: 100vh;
+            color: #f0f3fc;
+            overflow-x: hidden;
+        }
+        
+        /* Background Elements */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatOrb 25s infinite alternate ease-in-out;
+        }
+        
+        .bg-orb-1 { width: 70vh; height: 70vh; background: radial-gradient(circle, #dba357, #5a3a1e); top: -20vh; left: -15vw; animation-duration: 30s; }
+        .bg-orb-2 { width: 85vh; height: 85vh; background: radial-gradient(circle, #8b6946, #1a1428); bottom: -25vh; right: -20vw; animation-duration: 35s; animation-delay: -5s; }
+        
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(5%, 3%) scale(1.1); }
+        }
+        
+        /* Particle Field */
+        .particle-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(2px 2px at 15% 40%, rgba(230, 184, 126, 0.1) 1px, transparent 1px),
+                              radial-gradient(3px 3px at 75% 85%, rgba(230, 184, 126, 0.08) 1px, transparent 1px);
+            background-size: 55px 55px, 90px 90px;
+            pointer-events: none;
+            z-index: 0;
+            animation: driftParticles 180s linear infinite;
+        }
+        
+        @keyframes driftParticles {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 500px 500px, -300px 400px; }
+        }
+        
+        /* Dashboard Background Image Overlay */
+        .dashboard-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        /* Main Container */
+        .site-wrapper {
+            position: relative;
+            z-index: 10;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        /* ========== HEADER / NAVIGATION - RESPONSIVE WITH HAMBURGER ========== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(230, 190, 110, 0.15);
+            flex-wrap: wrap;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
+        }
+        
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e8bc7c, #c68944);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-icon:hover {
+            box-shadow: 0 0 20px rgba(230, 184, 126, 0.4);
+        }
+        
+        .logo-icon img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+        
+        .logo-icon i {
+            font-size: 1.3rem;
+            color: #0a0f1c;
+        }
+        
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e8bc7c, #f7d5a3, #dba357);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Desktop Navigation */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a {
+            color: #cbdaea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #e8bc7c, #f7d5a3);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #e6b87e;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .btn-nav-join {
+            background: linear-gradient(115deg, #e8bc7c, #c68944);
+            color: #0a0f1c !important;
+            padding: 0.7rem 1.8rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-nav-join::after {
+            display: none;
+        }
+        
+        .btn-nav-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(230, 184, 126, 0.4);
+            color: #0a0f1c !important;
+        }
+        
+        /* Hamburger Menu Button */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            background: transparent;
+            border: none;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: #e6b87e;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(2, 4, 12, 0.98);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .mobile-nav.active {
+            display: flex;
+        }
+        
+        .mobile-nav a {
+            color: #e6b87e;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+        }
+        
+        .mobile-nav a:hover {
+            color: #f7d5a3;
+            transform: scale(1.05);
+            background: rgba(230, 184, 126, 0.1);
+            border-radius: 2rem;
+        }
+        
+        .mobile-nav .btn-mobile-join {
+            background: linear-gradient(115deg, #e8bc7c, #c68944);
+            color: #0a0f1c;
+            padding: 0.8rem 2rem;
+            border-radius: 2rem;
+            margin-top: 1rem;
+        }
+        
+        .mobile-nav .close-mobile {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 2rem;
+            color: #e6b87e;
+            cursor: pointer;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* ========== HERO SECTION ========== */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            padding: 4rem 0;
+            align-items: center;
+        }
+        
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #FFF8EE, #FAD098, #e8bc7c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            color: #cbdaea;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .hero-stat {
+            text-align: left;
+        }
+        
+        .hero-stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e8bc7c, #f7d5a3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .hero-stat-label {
+            font-size: 0.8rem;
+            color: #9aaec9;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(115deg, #e8bc7c, #c68944);
+            color: #0a0f1c;
+            padding: 1rem 2rem;
+            border-radius: 3rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -8px rgba(230, 184, 126, 0.5);
+        }
+        
+        .btn-secondary {
+            background: rgba(15, 20, 35, 0.8);
+            border: 1.5px solid rgba(230, 190, 110, 0.4);
+            color: #e6b87e;
+            padding: 1rem 2rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(230, 184, 126, 0.1);
+            border-color: #e6b87e;
+            transform: translateY(-3px);
+        }
+        
+        .hero-image {
+            background: rgba(15, 20, 35, 0.6);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(230, 190, 110, 0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .hero-image:hover {
+            transform: translateY(-5px);
+            border-color: rgba(230, 190, 110, 0.4);
+        }
+        
+        .hero-image img {
+            width: 100%;
+            border-radius: 1rem;
+            opacity: 0.9;
+        }
+        
+        /* ========== FEATURES SECTION ========== */
+        .features {
+            padding: 5rem 0;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e8bc7c, #f7d5a3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            color: #9aaec9;
+            font-size: 1rem;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background: rgba(15, 20, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(230, 190, 110, 0.15);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(230, 190, 110, 0.5);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-icon {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, rgba(230, 184, 126, 0.15), rgba(198, 137, 68, 0.1));
+            border: 1px solid rgba(230, 190, 110, 0.3);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            border-color: #e6b87e;
+            background: rgba(230, 184, 126, 0.2);
+        }
+        
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: #e6b87e;
+        }
+        
+        .feature-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #e6b87e;
+            margin-bottom: 0.75rem;
+        }
+        
+        .feature-description {
+            color: #cbdaea;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+        
+        /* ========== HOW IT WORKS ========== */
+        .how-it-works {
+            padding: 5rem 0;
+            background: rgba(2, 8, 18, 0.4);
+            border-radius: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+        
+        .step {
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-number {
+            width: 3.5rem;
+            height: 3.5rem;
+            background: linear-gradient(135deg, #e8bc7c, #c68944);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #0a0f1c;
+            margin: 0 auto 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover .step-number {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(230, 184, 126, 0.4);
+        }
+        
+        .step-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #e6b87e;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-desc {
+            color: #9aaec9;
+            font-size: 0.85rem;
+        }
+        
+        /* ========== TESTIMONIALS ========== */
+        .testimonials {
+            padding: 5rem 0;
+        }
+        
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .testimonial-card {
+            background: rgba(15, 20, 35, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(230, 190, 110, 0.15);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(230, 190, 110, 0.4);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: #cbdaea;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .testimonial-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            border: 2px solid #e6b87e;
+            object-fit: cover;
+        }
+        
+        .testimonial-name {
+            font-weight: 700;
+            color: #e6b87e;
+        }
+        
+        .testimonial-location {
+            font-size: 0.7rem;
+            color: #9aaec9;
+        }
+        
+        /* ========== CTA SECTION ========== */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(26, 26, 62, 0.8), rgba(15, 20, 35, 0.9));
+            border-radius: 2rem;
+            padding: 4rem;
+            text-align: center;
+            margin: 4rem 0;
+            border: 1px solid rgba(230, 190, 110, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .cta-section:hover {
+            border-color: rgba(230, 190, 110, 0.4);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .cta-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e8bc7c, #f7d5a3);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-text {
+            color: #cbdaea;
+            margin-bottom: 2rem;
+        }
+        
+        /* ========== FOOTER ========== */
+        .footer {
+            border-top: 1px solid rgba(230, 190, 110, 0.15);
+            padding: 3rem 0 2rem;
+            margin-top: 3rem;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-col h4 {
+            color: #e6b87e;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .footer-col p {
+            color: #9aaec9;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        .footer-col a {
+            display: block;
+            color: #9aaec9;
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.3rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-col a:hover {
+            color: #e6b87e;
+            transform: translateX(5px);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: rgba(15, 20, 35, 0.8);
+            border: 1px solid rgba(230, 190, 110, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: linear-gradient(135deg, #e8bc7c, #c68944);
+            color: #0a0f1c;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(230, 190, 110, 0.1);
+            color: #7c8fae;
+            font-size: 0.75rem;
+        }
+        
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 968px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+            }
+            
+            .hero-buttons {
+                justify-content: center;
+            }
+            
+            .hero-stat {
+                text-align: center;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hamburger {
+                display: flex;
+            }
+            
+            .site-wrapper {
+                padding: 0 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .cta-section {
+                padding: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .social-links {
+                justify-content: center;
+            }
+        }
+        
+        /* Scroll Animation */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-up {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="particle-field"></div>
+    <div class="dashboard-image-overlay"></div>
+    
+    <div class="site-wrapper">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <img src="/static/images/logo.png" alt="PendoLink Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<i class=\'fas fa-heart\'></i>'">
+                    <i class="fas fa-heart" style="display: none;"></i>
+                </div>
+                <span class="logo-text">PendoLink</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#testimonials">Success Stories</a>
+                <a href="#contact">Contact</a>
+                <a href="{% url 'register' %}" class="btn-nav-join">Join Now</a>
+            </div>
+            
+            <!-- Hamburger Menu Button -->
+            <button class="hamburger" id="hamburgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+        
+        <!-- Mobile Navigation Menu -->
+        <div class="mobile-nav" id="mobileNav">
+            <div class="close-mobile" id="closeMobileBtn">&times;</div>
+            <a href="#home" onclick="closeMobileMenu()">Home</a>
+            <a href="#features" onclick="closeMobileMenu()">Features</a>
+            <a href="#how-it-works" onclick="closeMobileMenu()">How It Works</a>
+            <a href="#testimonials" onclick="closeMobileMenu()">Success Stories</a>
+            <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+            <a href="{% url 'register' %}" class="btn-mobile-join" onclick="closeMobileMenu()">Join Now</a>
+        </div>
+        
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content" data-aos="fade-up">
+                <h1>Meaningful Connections<br>Start Here</h1>
+                <p class="hero-description">
+                    PendoLink is a premium matchmaking platform designed for individuals seeking genuine, 
+                    lasting relationships. Our sophisticated approach brings together like-minded people 
+                    based on shared values, interests, and life goals.
+                </p>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-number">50,000+</div>
+                        <div class="hero-stat-label">Active Members</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-number">10,000+</div>
+                        <div class="hero-stat-label">Successful Matches</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-number">150+</div>
+                        <div class="hero-stat-label">Cities Served</div>
+                    </div>
+                </div>
+                <div class="hero-buttons">
+                    <a href="{% url 'register' %}" class="btn-primary">
+                        <i class="fas fa-heart"></i> Create Free Account
+                    </a>
+                    <a href="#how-it-works" class="btn-secondary">
+                        <i class="fas fa-info-circle"></i> Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="hero-image" data-aos="fade-up" data-aos-delay="200">
+                <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?w=600" alt="Happy couple connecting">
+            </div>
+        </section>
+        
+        <!-- Features Section -->
+        <section id="features" class="features">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Platform Features</h2>
+                <p class="section-subtitle">Everything you need to find your perfect match</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon"><i class="fas fa-user-check"></i></div>
+                    <h3 class="feature-title">Verified Profiles</h3>
+                    <p class="feature-description">Every profile undergoes verification to ensure authentic connections with real people.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3 class="feature-title">Location-Based Matching</h3>
+                    <p class="feature-description">Connect with compatible people in your area with precise location preferences.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon"><i class="fas fa-comment-dots"></i></div>
+                    <h3 class="feature-title">Secure Messaging</h3>
+                    <p class="feature-description">Private, encrypted conversations with read receipts and media sharing capabilities.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon"><i class="fas fa-filter"></i></div>
+                    <h3 class="feature-title">Advanced Preferences</h3>
+                    <p class="feature-description">Fine-tune your search with detailed filters including interests, lifestyle, and values.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h3 class="feature-title">Privacy First</h3>
+                    <p class="feature-description">Your data is protected with industry-standard security and privacy controls.</p>
+                </div>
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="feature-title">Profile Insights</h3>
+                    <p class="feature-description">Understand your profile performance with detailed analytics and engagement metrics.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- How It Works -->
+        <section id="how-it-works" class="how-it-works">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Simple Process</h2>
+                <p class="section-subtitle">Get started in four easy steps</p>
+            </div>
+            <div class="steps-container">
+                <div class="step" data-aos="fade-up" data-aos-delay="100">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Create Profile</h3>
+                    <p class="step-desc">Sign up and complete your profile with photos and preferences</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="200">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">Set Preferences</h3>
+                    <p class="step-desc">Define what you're looking for in a partner</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="300">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">Discover Matches</h3>
+                    <p class="step-desc">Browse through curated profiles that match your criteria</p>
+                </div>
+                <div class="step" data-aos="fade-up" data-aos-delay="400">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Start Connecting</h3>
+                    <p class="step-desc">Initiate conversations and build meaningful relationships</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Testimonials -->
+        <section id="testimonials" class="testimonials">
+            <div class="section-header" data-aos="fade-up">
+                <h2 class="section-title">Success Stories</h2>
+                <p class="section-subtitle">Real stories from real couples who found love</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+                    <p class="testimonial-text">"I joined PendoLink looking for something real. Within two months, I met someone who shares my values and dreams. We're now engaged!"</p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Sarah" class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-name">Sarah M.</div>
+                            <div class="testimonial-location">Nairobi, Kenya</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+                    <p class="testimonial-text">"The verification system gave me confidence. I found someone genuine and we've been together for over a year now. Highly recommended."</p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="David" class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-name">David K.</div>
+                            <div class="testimonial-location">Mombasa, Kenya</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+                    <p class="testimonial-text">"The matching system understood exactly what I was looking for. I've met amazing people and finally found my perfect match."</p>
+                    <div class="testimonial-author">
+                        <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="Grace" class="testimonial-avatar">
+                        <div>
+                            <div class="testimonial-name">Grace W.</div>
+                            <div class="testimonial-location">Kisumu, Kenya</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Call to Action -->
+        <section class="cta-section" data-aos="fade-up">
+            <h2 class="cta-title">Ready to Find Your Match?</h2>
+            <p class="cta-text">Join thousands of individuals who have found meaningful connections on PendoLink</p>
+            <a href="{% url 'register' %}" class="btn-primary" style="font-size: 1rem; padding: 0.9rem 2rem;">
+                <i class="fas fa-heart"></i> Create Free Account
+            </a>
+        </section>
+        
+        <!-- Footer -->
+        <footer id="contact" class="footer">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>PendoLink</h4>
+                    <p>Premium matchmaking platform dedicated to helping individuals find genuine, lasting relationships.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#testimonials">Success Stories</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Safety Tips</a>
+                    <a href="#">Contact Us</a>
+                    <a href="#">FAQ</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p><i class="fas fa-envelope"></i> hello@pendoLink.com</p>
+                    <p><i class="fas fa-phone"></i> +254 700 000 000</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 PendoLink. All rights reserved. Premium Matchmaking Platform</p>
+            </div>
+        </footer>
+    </div>
+    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+        
+        // Hamburger Menu Functionality
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const closeMobileBtn = document.getElementById('closeMobileBtn');
+        
+        function openMobileMenu() {
+            mobileNav.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            hamburgerBtn.classList.add('active');
+        }
+        
+        function closeMobileMenu() {
+            mobileNav.classList.remove('active');
+            document.body.style.overflow = '';
+            hamburgerBtn.classList.remove('active');
+        }
+        
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', openMobileMenu);
+        }
+        
+        if (closeMobileBtn) {
+            closeMobileBtn.addEventListener('click', closeMobileMenu);
+        }
+        
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.mobile-nav a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (mobileNav && mobileNav.classList.contains('active')) {
+                if (!mobileNav.contains(event.target) && !hamburgerBtn.contains(event.target)) {
+                    closeMobileMenu();
+                }
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    closeMobileMenu();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,626 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports Management - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       REPORTS MANAGEMENT PREMIUM STYLING - VERY SERIOUS & PROFESSIONAL
+       ================================================================== */
+    
+    /* Header card premium styling */
+    .header-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1.5rem !important;
+    }
+    
+    .header-card h1 {
+        color: #e6b87e !important;
+        font-family: 'Playfair Display', serif;
+    }
+    
+    /* Stats cards premium styling */
+    .stat-card {
+        background: rgba(2, 8, 18, 0.75) !important;
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(230, 190, 110, 0.4);
+        box-shadow: 0 10px 25px -8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .stat-card-pending .stat-value { color: #ef4444; }
+    .stat-card-pending .stat-icon { color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+    
+    .stat-card-investigating .stat-value { color: #f59e0b; }
+    .stat-card-investigating .stat-icon { color: #f59e0b; background: rgba(245, 158, 11, 0.15); }
+    
+    .stat-card-resolved .stat-value { color: #10b981; }
+    .stat-card-resolved .stat-icon { color: #10b981; background: rgba(16, 185, 129, 0.15); }
+    
+    .stat-card-response .stat-value { color: #e6b87e; }
+    .stat-card-response .stat-icon { color: #e6b87e; background: rgba(230, 184, 126, 0.15); }
+    
+    .stat-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+    }
+    
+    .stat-label {
+        color: #9aaec9;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Tabs premium styling */
+    .tabs-container {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-bottom: none;
+        border-radius: 1.5rem 1.5rem 0 0;
+    }
+    
+    .report-tab {
+        background: transparent !important;
+        color: #9aaec9 !important;
+        border-bottom: 2px solid transparent !important;
+        transition: all 0.3s ease;
+        font-weight: 600;
+    }
+    
+    .report-tab:hover {
+        color: #e6b87e !important;
+    }
+    
+    .report-tab.active {
+        color: #e6b87e !important;
+        border-bottom-color: #e6b87e !important;
+    }
+    
+    /* Reports container */
+    .reports-container {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-top: none;
+        border-radius: 0 0 1.5rem 1.5rem;
+        overflow: hidden;
+    }
+    
+    /* Report item styling */
+    .report-item {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(230, 190, 110, 0.1) !important;
+        transition: all 0.3s ease;
+    }
+    
+    .report-item:hover {
+        background: rgba(230, 184, 126, 0.05) !important;
+        transform: translateX(4px);
+    }
+    
+    /* Report badge */
+    .report-badge {
+        background: rgba(239, 68, 68, 0.15) !important;
+        color: #ef4444 !important;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+    
+    /* User avatars in reports */
+    .user-avatar {
+        border: 2px solid #e6b87e;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .user-name {
+        color: #e6b87e !important;
+        font-weight: 600;
+    }
+    
+    .user-label {
+        color: #7c8fae !important;
+        font-size: 0.7rem;
+    }
+    
+    /* Report description */
+    .report-description {
+        color: #cbdaea !important;
+        line-height: 1.5;
+    }
+    
+    /* Report meta info */
+    .report-meta {
+        color: #7c8fae !important;
+        font-size: 0.7rem;
+    }
+    
+    /* Action buttons */
+    .btn-assign {
+        background: rgba(59, 130, 246, 0.15) !important;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #3b82f6 !important;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-assign:hover {
+        background: #3b82f6 !important;
+        color: white !important;
+        transform: translateY(-2px);
+    }
+    
+    .btn-review {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-review:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.3);
+    }
+    
+    /* Empty state */
+    .empty-state-reports {
+        background: rgba(15, 20, 35, 0.85) !important;
+        border: 1px dashed rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem;
+        padding: 3rem;
+    }
+    
+    /* Pagination premium */
+    .pagination-premium {
+        background: rgba(15, 20, 35, 0.85);
+        border-top: 1px solid rgba(230, 190, 110, 0.1);
+    }
+    
+    .pagination-link {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1px solid rgba(200, 165, 100, 0.3) !important;
+        color: #e6b87e !important;
+        transition: all 0.3s ease;
+    }
+    
+    .pagination-link:hover {
+        background: rgba(230, 184, 126, 0.15) !important;
+        border-color: #e6b87e !important;
+        transform: translateY(-2px);
+    }
+    
+    .pagination-active {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        border: none !important;
+    }
+    
+    /* Modal premium styling */
+    .modal-premium {
+        background: rgba(15, 20, 35, 0.98) !important;
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem !important;
+    }
+    
+    .modal-close {
+        background: rgba(15, 20, 35, 0.9);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+        background: rgba(230, 184, 126, 0.2);
+        transform: scale(1.05);
+    }
+    
+    /* Report details section in modal */
+    .details-section {
+        background: rgba(230, 184, 126, 0.05) !important;
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1rem;
+    }
+    
+    .profile-section {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1rem;
+    }
+    
+    /* Form elements in modal */
+    .modal-form select, .modal-form textarea, .modal-form input {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #f0f3fc !important;
+        border-radius: 1rem !important;
+    }
+    
+    .modal-form select:focus, .modal-form textarea:focus, .modal-form input:focus {
+        border-color: #e6b87e !important;
+        box-shadow: 0 0 0 3px rgba(230, 184, 126, 0.15);
+        outline: none;
+    }
+    
+    .modal-form label {
+        color: #e6b87e !important;
+        font-weight: 500;
+    }
+    
+    .btn-submit {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 700;
+    }
+    
+    .btn-cancel {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #e6b87e !important;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .stat-value {
+            font-size: 1.25rem;
+        }
+        
+        .report-item .flex-wrap {
+            flex-direction: column;
+        }
+        
+        .btn-assign, .btn-review {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="header-card rounded-2xl p-6">
+        <h1 class="text-2xl font-bold mb-2">Reports Management</h1>
+        <p class="text-gray-400 mt-1">Review and manage user reports</p>
+        
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
+            <div class="stat-card stat-card-pending rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="stat-label">Pending</p>
+                        <p class="stat-value text-red-400">{{ pending_count }}</p>
+                    </div>
+                    <div class="stat-icon w-10 h-10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-investigating rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="stat-label">Investigating</p>
+                        <p class="stat-value text-amber-400">{{ investigating_count }}</p>
+                    </div>
+                    <div class="stat-icon w-10 h-10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-search text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-resolved rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="stat-label">Resolved</p>
+                        <p class="stat-value text-emerald-400">{{ resolved_count }}</p>
+                    </div>
+                    <div class="stat-icon w-10 h-10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check-circle text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-card stat-card-response rounded-xl p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="stat-label">Avg Response Time</p>
+                        <p class="stat-value text-premium">{{ avg_response_time }}h</p>
+                    </div>
+                    <div class="stat-icon w-10 h-10 rounded-full flex items-center justify-center">
+                        <i class="fas fa-chart-line text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs-container rounded-t-2xl px-6">
+        <nav class="flex space-x-8">
+            <button class="report-tab py-4 px-1 {% if current_status == 'pending' %}active{% endif %}" data-status="pending">
+                Pending ({{ pending_count }})
+            </button>
+            <button class="report-tab py-4 px-1 {% if current_status == 'investigating' %}active{% endif %}" data-status="investigating">
+                Investigating ({{ investigating_count }})
+            </button>
+            <button class="report-tab py-4 px-1 {% if current_status == 'resolved' %}active{% endif %}" data-status="resolved">
+                Resolved ({{ resolved_count }})
+            </button>
+        </nav>
+    </div>
+    
+    <!-- Reports List -->
+    <div class="reports-container rounded-b-2xl overflow-hidden">
+        <div id="reports-container" class="divide-y divide-gray-800">
+            {% for report in reports %}
+            <div class="report-item p-6 transition" data-report-id="{{ report.id }}">
+                <div class="flex flex-wrap justify-between items-start gap-4">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-2">
+                            <span class="report-badge">
+                                {{ report.get_reason_display }}
+                            </span>
+                            <span class="text-xs text-gray-500">Report #{{ report.id }}</span>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center">
+                                <img src="{{ report.reported_by.profile_picture|default:'https://via.placeholder.com/32' }}" 
+                                     class="user-avatar w-8 h-8 rounded-full object-cover">
+                                <div class="ml-2">
+                                    <p class="user-name text-sm">{{ report.reported_by.username }}</p>
+                                    <p class="user-label">reported</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-arrow-right text-gray-500 text-sm"></i>
+                            <div class="flex items-center">
+                                <img src="{{ report.reported_user.profile_picture|default:'https://via.placeholder.com/32' }}" 
+                                     class="user-avatar w-8 h-8 rounded-full object-cover">
+                                <div class="ml-2">
+                                    <p class="user-name text-sm">{{ report.reported_user.username }}</p>
+                                    <p class="user-label">reported user</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="report-description mt-3">{{ report.description|truncatechars:200 }}</p>
+                        
+                        <div class="report-meta flex items-center space-x-4 mt-3">
+                            <span><i class="far fa-clock mr-1"></i> {{ report.created_at|timesince }} ago</span>
+                            {% if report.assigned_to %}
+                            <span><i class="fas fa-user-check mr-1"></i> Assigned to {{ report.assigned_to.username }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-2">
+                        {% if report.status == 'pending' %}
+                        <button onclick="assignToMe({{ report.id }})" class="btn-assign px-4 py-2 rounded-lg text-sm transition">
+                            <i class="fas fa-user-check mr-1"></i> Assign to me
+                        </button>
+                        {% endif %}
+                        <button onclick="reviewReport({{ report.id }})" class="btn-review px-4 py-2 rounded-lg text-sm transition">
+                            <i class="fas fa-eye mr-1"></i> Review
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state-reports text-center py-12">
+                <i class="fas fa-check-circle text-6xl text-premium mb-4 block"></i>
+                <h3 class="text-xl font-semibold text-white mb-2">No reports to review</h3>
+                <p class="text-gray-400">All clear! All reports have been handled.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if reports.has_other_pages %}
+        <div class="pagination-premium px-6 py-4">
+            <div class="flex justify-center space-x-2">
+                {% if reports.has_previous %}
+                <a href="?page={{ reports.previous_page_number }}&status={{ current_status }}" class="pagination-link px-3 py-1 rounded-lg transition">Previous</a>
+                {% endif %}
+                {% for num in reports.paginator.page_range %}
+                    <a href="?page={{ num }}&status={{ current_status }}" class="pagination-link px-3 py-1 rounded-lg transition {% if reports.number == num %}pagination-active{% endif %}">
+                        {{ num }}
+                    </a>
+                {% endfor %}
+                {% if reports.has_next %}
+                <a href="?page={{ reports.next_page_number }}&status={{ current_status }}" class="pagination-link px-3 py-1 rounded-lg transition">Next</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Review Report Modal -->
+<div id="review-modal" class="fixed inset-0 bg-black bg-opacity-70 z-50 hidden overflow-y-auto">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="modal-premium rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div id="review-content"></div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+let currentReportId = null;
+
+// Tab switching
+document.querySelectorAll('.report-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        const status = tab.dataset.status;
+        window.location.href = `?status=${status}`;
+    });
+});
+
+function assignToMe(reportId) {
+    showLoading();
+    fetch(`/admin/api/reports/${reportId}/assign/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+
+function reviewReport(reportId) {
+    currentReportId = reportId;
+    showLoading();
+    fetch(`/admin/api/reports/${reportId}/`)
+        .then(response => response.json())
+        .then(data => {
+            hideLoading();
+            const modal = document.getElementById('review-modal');
+            const content = document.getElementById('review-content');
+            
+            content.innerHTML = `
+                <div class="relative p-6">
+                    <button onclick="closeReviewModal()" class="modal-close absolute top-4 right-4 rounded-full p-2 transition z-10">
+                        <i class="fas fa-times text-gray-300 text-xl"></i>
+                    </button>
+                    
+                    <h2 class="text-2xl font-bold text-premium mb-4">Review Report #${data.id}</h2>
+                    
+                    <!-- Report Details -->
+                    <div class="details-section rounded-xl p-4 mb-6">
+                        <h3 class="font-semibold text-premium mb-3">Report Details</h3>
+                        <div class="space-y-2 text-gray-300">
+                            <p><strong class="text-premium">Reason:</strong> ${data.reason_display}</p>
+                            <p><strong class="text-premium">Reported by:</strong> ${data.reported_by.username}</p>
+                            <p><strong class="text-premium">Reported user:</strong> ${data.reported_user.username}</p>
+                            <p><strong class="text-premium">Created:</strong> ${new Date(data.created_at).toLocaleString()}</p>
+                            <p><strong class="text-premium">Description:</strong> ${data.description || 'No description provided'}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Reported User Profile -->
+                    <div class="profile-section rounded-xl p-4 mb-6">
+                        <h3 class="font-semibold text-premium mb-3">Reported User Profile</h3>
+                        <div class="flex items-center mb-3">
+                            <img src="${data.reported_user.profile_picture || 'https://via.placeholder.com/60'}" 
+                                 class="user-avatar w-16 h-16 rounded-full object-cover">
+                            <div class="ml-3">
+                                <p class="user-name font-bold text-lg">${data.reported_user.username}</p>
+                                <p class="text-gray-400 text-sm">${data.reported_user.email}</p>
+                                <p class="text-gray-500 text-xs">Member since: ${new Date(data.reported_user.created_at).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-sm mt-4">
+                            <div>
+                                <p><strong class="text-premium">Bio:</strong> <span class="text-gray-400">${data.reported_user.bio || 'No bio'}</span></p>
+                                <p><strong class="text-premium">Location:</strong> <span class="text-gray-400">${data.reported_user.location?.city || 'N/A'}</span></p>
+                            </div>
+                            <div>
+                                <p><strong class="text-premium">Previous reports:</strong> <span class="text-red-400">${data.reported_user.report_count} times</span></p>
+                                <p><strong class="text-premium">Status:</strong> <span class="${data.reported_user.is_active ? 'text-emerald-400' : 'text-red-400'}">${data.reported_user.is_active ? 'Active' : 'Inactive'}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Form -->
+                    <form id="review-action-form" class="modal-form space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Action to take</label>
+                            <select name="action_type" required class="w-full px-4 py-2 rounded-xl">
+                                <option value="">Select action</option>
+                                <option value="warning">Issue Warning</option>
+                                <option value="photo_removed">Remove Photo</option>
+                                <option value="profile_hidden">Hide Profile</option>
+                                <option value="temp_ban">Temporary Ban</option>
+                                <option value="perm_ban">Permanent Ban</option>
+                                <option value="dismiss">Dismiss Report</option>
+                            </select>
+                        </div>
+                        
+                        <div id="duration-field" class="hidden">
+                            <label class="block text-sm font-medium mb-2">Ban Duration (days)</label>
+                            <input type="number" name="duration_days" class="w-full px-4 py-2 rounded-xl">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2">Resolution Notes</label>
+                            <textarea name="notes" rows="3" class="w-full px-4 py-2 rounded-xl" required></textarea>
+                        </div>
+                        
+                        <div class="flex space-x-3 pt-2">
+                            <button type="submit" class="btn-submit flex-1 py-2 rounded-xl font-semibold transition">Submit Resolution</button>
+                            <button type="button" onclick="closeReviewModal()" class="btn-cancel flex-1 py-2 rounded-xl font-semibold transition">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            // Show/hide duration field based on action
+            const actionSelect = content.querySelector('select[name="action_type"]');
+            const durationField = content.querySelector('#duration-field');
+            
+            actionSelect.addEventListener('change', function() {
+                if (this.value === 'temp_ban') {
+                    durationField.classList.remove('hidden');
+                } else {
+                    durationField.classList.add('hidden');
+                }
+            });
+            
+            // Handle form submission
+            const form = content.querySelector('#review-action-form');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                showLoading();
+                fetch(`/admin/api/reports/${data.id}/resolve/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action_type: formData.get('action_type'),
+                        duration_days: formData.get('duration_days'),
+                        notes: formData.get('notes')
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    hideLoading();
+                    if (result.success) {
+                        closeReviewModal();
+                        location.reload();
+                    }
+                });
+            });
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        });
+}
+
+function closeReviewModal() {
+    const modal = document.getElementById('review-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+</script>
+{% endblock %}
+{% endblock %}

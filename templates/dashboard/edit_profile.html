@@ -1,0 +1,560 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Profile - PendoLink{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       EDIT PROFILE PREMIUM STYLING - VERY SERIOUS & PROFESSIONAL
+       ================================================================== */
+    
+    /* Main card premium styling */
+    .edit-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1.5rem !important;
+        overflow: hidden;
+    }
+    
+    /* Header gradient */
+    .edit-header {
+        background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%) !important;
+        border-bottom: 2px solid rgba(230, 190, 110, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .edit-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357, #e6b87e);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    @keyframes shimmerHeader {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+    
+    .edit-header h1 {
+        font-family: 'Playfair Display', serif;
+    }
+    
+    /* Section headers */
+    .section-title {
+        color: #e6b87e !important;
+        border-bottom: 2px solid rgba(230, 190, 110, 0.3);
+        padding-bottom: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* Form labels */
+    .form-label {
+        color: #cbdaea !important;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+    }
+    
+    /* Input fields */
+    .form-input, .form-select, .form-textarea {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #f0f3fc !important;
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+        border-color: #e6b87e !important;
+        box-shadow: 0 0 0 3px rgba(230, 184, 126, 0.15);
+        outline: none;
+    }
+    
+    .form-input::placeholder, .form-textarea::placeholder {
+        color: #7c8fae;
+    }
+    
+    /* Checkbox styling */
+    .interest-checkbox {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        border-radius: 0.5rem !important;
+        width: 18px;
+        height: 18px;
+        accent-color: #e6b87e;
+    }
+    
+    .interest-label {
+        color: #cbdaea !important;
+        transition: all 0.3s ease;
+    }
+    
+    .interest-label:hover {
+        color: #e6b87e !important;
+    }
+    
+    /* Range slider styling */
+    input[type="range"] {
+        -webkit-appearance: none;
+        background: rgba(2, 8, 18, 0.75);
+        border-radius: 9999px;
+        height: 6px;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        background: linear-gradient(115deg, #e8bc7c, #c68944);
+        border-radius: 50%;
+        cursor: pointer;
+        border: none;
+        box-shadow: 0 0 5px rgba(230, 184, 126, 0.5);
+    }
+    
+    input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+    }
+    
+    .range-value {
+        color: #e6b87e !important;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+    
+    /* Location button */
+    .location-btn {
+        color: #e6b87e !important;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .location-btn:hover {
+        color: #f7d5a3 !important;
+        transform: translateX(4px);
+    }
+    
+    /* Submit buttons */
+    .btn-save {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        border-radius: 1rem !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-save::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 245, 200, 0.4), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .btn-save:hover::before {
+        left: 100%;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.4);
+    }
+    
+    .btn-cancel {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #e6b87e !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border-radius: 1rem !important;
+    }
+    
+    .btn-cancel:hover {
+        background: rgba(230, 184, 126, 0.15) !important;
+        border-color: #e6b87e !important;
+    }
+    
+    /* Danger Zone */
+    .danger-zone {
+        background: rgba(239, 68, 68, 0.1) !important;
+        border: 2px solid rgba(239, 68, 68, 0.3);
+        border-radius: 1.5rem !important;
+        backdrop-filter: blur(12px);
+        transition: all 0.3s ease;
+    }
+    
+    .danger-zone:hover {
+        border-color: #ef4444;
+        background: rgba(239, 68, 68, 0.15) !important;
+    }
+    
+    .danger-title {
+        color: #ef4444 !important;
+    }
+    
+    .btn-delete {
+        background: #ef4444 !important;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-delete:hover {
+        background: #dc2626 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .edit-card {
+            margin: 1rem;
+        }
+        
+        .edit-header {
+            text-align: center;
+        }
+        
+        .btn-save, .btn-cancel {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .flex.space-x-4 {
+            flex-direction: column;
+            gap: 1rem;
+        }
+    }
+    
+    /* Select dropdown arrow styling */
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%23e6b87e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+        background-position: right 0.75rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem;
+        padding-right: 2.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <div class="edit-card rounded-2xl overflow-hidden" data-aos="fade-up">
+        <div class="edit-header px-8 py-6">
+            <h1 class="text-2xl font-bold text-white">Edit Your Profile</h1>
+            <p class="text-premium-bright mt-1">Complete your profile to get better matches</p>
+        </div>
+        
+        <form method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
+            {% csrf_token %}
+            
+            <!-- Basic Information -->
+            <div class="space-y-4">
+                <h2 class="section-title text-xl font-bold">Basic Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Display Name</label>
+                        <input type="text" name="username" value="{{ user.username }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Email</label>
+                        <input type="email" name="email" value="{{ user.email }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Phone Number</label>
+                        <input type="tel" name="phone_number" value="{{ user.phone_number }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Date of Birth</label>
+                        <input type="date" name="date_of_birth" value="{{ user.date_of_birth|date:'Y-m-d' }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Gender</label>
+                        <select name="gender" class="form-select w-full px-4 py-2 rounded-xl">
+                            <option value="M" {% if user.gender == 'M' %}selected{% endif %}>Male</option>
+                            <option value="F" {% if user.gender == 'F' %}selected{% endif %}>Female</option>
+                            <option value="O" {% if user.gender == 'O' %}selected{% endif %}>Other</option>
+                            <option value="P" {% if user.gender == 'P' %}selected{% endif %}>Prefer not to say</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Looking for</label>
+                        <select name="looking_for" class="form-select w-full px-4 py-2 rounded-xl">
+                            <option value="M" {% if user.looking_for == 'M' %}selected{% endif %}>Male</option>
+                            <option value="F" {% if user.looking_for == 'F' %}selected{% endif %}>Female</option>
+                            <option value="O" {% if user.looking_for == 'O' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Details -->
+            <div class="space-y-4">
+                <h2 class="section-title text-xl font-bold">Profile Details</h2>
+                <div>
+                    <label class="form-label block text-sm font-medium mb-2">Bio</label>
+                    <textarea name="bio" rows="4" class="form-textarea w-full px-4 py-2 rounded-xl"
+                              placeholder="Tell others about yourself...">{{ user.profile.bio }}</textarea>
+                    <p class="text-xs text-gray-500 mt-1">Max 500 characters</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Occupation</label>
+                        <input type="text" name="occupation" value="{{ user.profile.occupation }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Education</label>
+                        <input type="text" name="education" value="{{ user.profile.education }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Height (cm)</label>
+                        <input type="number" name="height" value="{{ user.profile.height }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Religion</label>
+                        <input type="text" name="religion" value="{{ user.profile.religion }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Location -->
+            <div class="space-y-4">
+                <h2 class="section-title text-xl font-bold">Location</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">City</label>
+                        <input type="text" name="city" value="{{ user.location.city }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Town</label>
+                        <input type="text" name="town" value="{{ user.location.town }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                </div>
+                <button type="button" onclick="getCurrentLocation()" class="location-btn text-sm">
+                    <i class="fas fa-location-dot mr-1"></i> Use my current location
+                </button>
+            </div>
+            
+            <!-- Interests -->
+            <div class="space-y-4">
+                <h2 class="section-title text-xl font-bold">Interests</h2>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {% for interest in all_interests %}
+                    <label class="interest-label flex items-center space-x-2 cursor-pointer">
+                        <input type="checkbox" name="interests" value="{{ interest.id }}" 
+                               {% if interest.id in user_interests %}checked{% endif %}
+                               class="interest-checkbox rounded">
+                        <span class="text-sm">{{ interest.name }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <!-- Dating Preferences -->
+            <div class="space-y-4">
+                <h2 class="section-title text-xl font-bold">Dating Preferences</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Minimum Age</label>
+                        <input type="number" name="age_min" value="{{ user.profile.age_min }}" min="18" max="100"
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Maximum Age</label>
+                        <input type="number" name="age_max" value="{{ user.profile.age_max }}" min="18" max="100"
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">Maximum Distance (km)</label>
+                        <input type="number" name="distance_max" value="{{ user.profile.distance_max }}" 
+                               class="form-input w-full px-4 py-2 rounded-xl">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Personality Quiz -->
+            <div class="space-y-4">
+                <h2 class="section-title text-xl font-bold">Personality Quiz <span class="text-sm text-gray-500">(Optional)</span></h2>
+                <p class="text-sm text-gray-400">Answer these questions to improve your matches</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">How outgoing are you?</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" name="extrovert" min="0" max="100" value="{{ user.profile.personality_traits.extrovert|default:'50' }}"
+                                   class="flex-1" onchange="updateRangeValue(this, 'extrovert-value')">
+                            <span id="extrovert-value" class="range-value text-sm">{{ user.profile.personality_traits.extrovert|default:'50' }}%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">How adventurous are you?</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" name="adventurous" min="0" max="100" value="{{ user.profile.personality_traits.adventurous|default:'50' }}"
+                                   class="flex-1" onchange="updateRangeValue(this, 'adventurous-value')">
+                            <span id="adventurous-value" class="range-value text-sm">{{ user.profile.personality_traits.adventurous|default:'50' }}%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">How romantic are you?</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" name="romantic" min="0" max="100" value="{{ user.profile.personality_traits.romantic|default:'50' }}"
+                                   class="flex-1" onchange="updateRangeValue(this, 'romantic-value')">
+                            <span id="romantic-value" class="range-value text-sm">{{ user.profile.personality_traits.romantic|default:'50' }}%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label block text-sm font-medium mb-2">How important is career to you?</label>
+                        <div class="flex items-center gap-3">
+                            <input type="range" name="career_focused" min="0" max="100" value="{{ user.profile.personality_traits.career_focused|default:'50' }}"
+                                   class="flex-1" onchange="updateRangeValue(this, 'career-value')">
+                            <span id="career-value" class="range-value text-sm">{{ user.profile.personality_traits.career_focused|default:'50' }}%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Submit Buttons -->
+            <div class="flex space-x-4 pt-6 border-t border-gray-700">
+                <button type="submit" class="btn-save flex-1 py-3 rounded-xl font-semibold transition">
+                    <i class="fas fa-save mr-2"></i> Save Changes
+                </button>
+                <a href="{% url 'profile' %}" class="btn-cancel flex-1 py-3 rounded-xl font-semibold text-center transition">
+                    <i class="fas fa-times mr-2"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Danger Zone -->
+    <div class="danger-zone rounded-2xl p-6 mt-8" data-aos="fade-up">
+        <h3 class="danger-title text-lg font-bold mb-2">Danger Zone</h3>
+        <p class="text-sm text-red-400 mb-4">Once you delete your account, there is no going back.</p>
+        <button onclick="deleteAccount()" class="btn-delete text-white px-6 py-2 rounded-xl transition">
+            <i class="fas fa-trash-alt mr-2"></i> Delete Account
+        </button>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function updateRangeValue(range, spanId) {
+    document.getElementById(spanId).textContent = range.value + '%';
+}
+
+function getCurrentLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            showLoading();
+            fetch('/api/locations/update/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.city) {
+                    document.querySelector('input[name="city"]').value = data.city;
+                    document.querySelector('input[name="town"]').value = data.town;
+                    showNotification('success', 'Location updated!');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showNotification('error', 'Failed to get location');
+            });
+        }, function(error) {
+            showNotification('error', 'Unable to get your location. Please check permissions.');
+        });
+    } else {
+        showNotification('error', 'Geolocation is not supported by this browser.');
+    }
+}
+
+function deleteAccount() {
+    if (confirm('Are you absolutely sure? This action cannot be undone.')) {
+        const confirmation = prompt('Type "DELETE" to confirm account deletion:');
+        if (confirmation === 'DELETE') {
+            showLoading();
+            fetch('/api/users/delete-account/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                if (data.success) {
+                    showNotification('success', 'Account deleted successfully');
+                    setTimeout(() => {
+                        window.location.href = '/logout/';
+                    }, 2000);
+                } else {
+                    showNotification('error', data.error || 'Failed to delete account');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                showNotification('error', 'Network error. Please try again.');
+            });
+        } else {
+            showNotification('info', 'Account deletion cancelled');
+        }
+    }
+}
+
+function showNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 right-4 z-50 rounded-lg shadow-xl p-4 max-w-md slide-in border-l-4 transition-all duration-300 ${
+        type === 'success' ? 'border-green-500' : type === 'error' ? 'border-red-500' : 'border-premium'
+    }`;
+    notification.style.background = 'rgba(15, 20, 35, 0.95)';
+    notification.style.backdropFilter = 'blur(12px)';
+    notification.style.border = `1px solid rgba(230, 190, 110, 0.2)`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle text-green-500' : type === 'error' ? 'fa-exclamation-circle text-red-500' : 'fa-info-circle text-premium'} mr-3 text-lg"></i>
+            <p class="text-sm text-gray-200">${message}</p>
+            <button class="ml-auto text-gray-400 hover:text-gray-300 transition" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => notification.remove(), 5000);
+}
+</script>
+{% endblock %}
+{% endblock %}

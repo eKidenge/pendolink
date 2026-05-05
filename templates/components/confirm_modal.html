@@ -1,0 +1,74 @@
+<!-- Confirmation Modal -->
+<div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 slide-in">
+        <div class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
+                 id="confirm-icon-bg">
+                <i id="confirm-icon" class="fas fa-question text-3xl"></i>
+            </div>
+            <h3 id="confirm-title" class="text-2xl font-bold text-gray-800 mb-2">Confirm Action</h3>
+            <p id="confirm-message" class="text-gray-600 mb-6">Are you sure you want to proceed?</p>
+            
+            <div class="flex space-x-3">
+                <button id="confirm-yes" class="flex-1 bg-red-600 text-white py-2 rounded-xl hover:bg-red-700 transition">
+                    Yes, Continue
+                </button>
+                <button id="confirm-no" class="flex-1 border border-gray-300 text-gray-600 py-2 rounded-xl hover:bg-gray-50 transition">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let confirmCallback = null;
+
+function showConfirm(options) {
+    const modal = document.getElementById('confirm-modal');
+    const title = document.getElementById('confirm-title');
+    const message = document.getElementById('confirm-message');
+    const yesBtn = document.getElementById('confirm-yes');
+    const noBtn = document.getElementById('confirm-no');
+    const iconBg = document.getElementById('confirm-icon-bg');
+    const icon = document.getElementById('confirm-icon');
+    
+    title.textContent = options.title || 'Confirm Action';
+    message.textContent = options.message || 'Are you sure you want to proceed?';
+    confirmCallback = options.onConfirm;
+    
+    // Set icon style based on type
+    if (options.type === 'danger') {
+        iconBg.className = 'w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center';
+        icon.className = 'fas fa-exclamation-triangle text-red-600 text-3xl';
+        yesBtn.className = 'flex-1 bg-red-600 text-white py-2 rounded-xl hover:bg-red-700 transition';
+    } else if (options.type === 'warning') {
+        iconBg.className = 'w-16 h-16 mx-auto mb-4 rounded-full bg-yellow-100 flex items-center justify-center';
+        icon.className = 'fas fa-exclamation-triangle text-yellow-600 text-3xl';
+        yesBtn.className = 'flex-1 bg-yellow-600 text-white py-2 rounded-xl hover:bg-yellow-700 transition';
+    } else {
+        iconBg.className = 'w-16 h-16 mx-auto mb-4 rounded-full bg-purple-100 flex items-center justify-center';
+        icon.className = 'fas fa-question text-purple-600 text-3xl';
+        yesBtn.className = 'flex-1 bg-purple-600 text-white py-2 rounded-xl hover:bg-purple-700 transition';
+    }
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+}
+
+document.getElementById('confirm-yes')?.addEventListener('click', () => {
+    if (confirmCallback) confirmCallback();
+    closeConfirm();
+});
+
+document.getElementById('confirm-no')?.addEventListener('click', () => {
+    closeConfirm();
+});
+
+function closeConfirm() {
+    const modal = document.getElementById('confirm-modal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    confirmCallback = null;
+}
+</script>

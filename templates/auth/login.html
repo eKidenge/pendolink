@@ -1,0 +1,676 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login - PendoLink{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       PREMIUM STYLING - SCOPED TO LOGIN PAGE ONLY
+       No interference with base template footer or other elements
+       ================================================================== */
+    
+    /* CSS Custom Properties */
+    :root {
+      --color-bg-deep: #0a0e1a;
+      --color-bg-void: #02040c;
+      --color-gold-primary: #e6b87e;
+      --color-gold-bright: #f7d5a3;
+      --color-gold-dark: #b47c44;
+      --color-amber-glow: rgba(230, 184, 126, 0.25);
+      --color-glass-bg: rgba(8, 14, 26, 0.62);
+      --color-glass-border: rgba(230, 190, 120, 0.3);
+      --color-text-lux: #f0f3fc;
+      --color-text-muted: #9aaec9;
+      --shadow-elevation-low: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      --shadow-elevation-medium: 0 20px 40px -12px rgba(0, 0, 0, 0.6);
+      --shadow-elevation-high: 0 35px 60px -15px rgba(0, 0, 0, 0.8);
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --border-radius-card: 2.5rem;
+      --border-radius-input: 3rem;
+      --border-radius-button: 3rem;
+      --font-serif: 'Playfair Display', serif;
+      --font-sans: 'Inter', sans-serif;
+    }
+
+    /* Override body styles ONLY for login page, without breaking base template */
+    .login-page-body {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at 20% 30%, var(--color-bg-deep) 0%, var(--color-bg-void) 100%);
+      font-family: var(--font-sans);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow-x: hidden;
+      padding: 1.5rem;
+      isolation: isolate;
+      margin: 0;
+    }
+    
+    /* Wrap all login content in a container with proper positioning */
+    .login-container-wrapper {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+    }
+    
+    /* animated particle field - scoped */
+    .login-particle-field {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    .login-particle-field::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(2px 2px at 15% 40%, rgba(255,220,160,0.15) 1px, transparent 1px),
+                        radial-gradient(3px 3px at 75% 85%, rgba(230,180,100,0.1) 1px, transparent 1px),
+                        radial-gradient(1px 1px at 45% 20%, rgba(255,200,120,0.2) 1px, transparent 1px);
+      background-size: 55px 55px, 90px 90px, 40px 40px;
+      animation: loginDriftParticles 180s linear infinite;
+    }
+    
+    @keyframes loginDriftParticles {
+      0% { background-position: 0 0, 0 0, 0 0; }
+      100% { background-position: 500px 500px, -300px 400px, 200px -300px; }
+    }
+    
+    /* floating orbs - scoped */
+    .login-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.35;
+      pointer-events: none;
+      z-index: 0;
+      animation: loginFloatOrb 25s infinite alternate ease-in-out;
+    }
+    
+    .login-orb-1 {
+      width: 70vh;
+      height: 70vh;
+      background: radial-gradient(circle, #dba357, #5a3a1e);
+      top: -20vh;
+      left: -15vw;
+      animation-duration: 30s;
+    }
+    
+    .login-orb-2 {
+      width: 85vh;
+      height: 85vh;
+      background: radial-gradient(circle, #8b6946, #1a1428);
+      bottom: -25vh;
+      right: -20vw;
+      animation-duration: 35s;
+      animation-delay: -5s;
+    }
+    
+    .login-orb-3 {
+      width: 60vh;
+      height: 60vh;
+      background: radial-gradient(circle, #c99455, #261e12);
+      top: 50%;
+      left: 60%;
+      animation-duration: 28s;
+      animation-delay: -12s;
+      opacity: 0.25;
+    }
+    
+    @keyframes loginFloatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(5%, 3%) scale(1.1); }
+    }
+    
+    /* scanline overlay - scoped */
+    .login-scanline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0.02) 1px,
+        rgba(0, 0, 0, 0) 2px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* MAIN CARD COMPONENT */
+    .login-wrapper {
+      position: relative;
+      z-index: 20;
+      width: 100%;
+      max-width: 580px;
+      margin: 0 auto;
+      perspective: 1200px;
+    }
+    
+    .glass-card {
+      background: var(--color-glass-bg);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-radius: var(--border-radius-card);
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation-high), 
+                  0 0 0 1px var(--color-glass-border) inset,
+                  0 0 0 2px rgba(0, 0, 0, 0.25) inset;
+      transition: var(--transition-smooth);
+      border: 1px solid rgba(255, 215, 150, 0.15);
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 45px 80px -20px rgba(0, 0, 0, 0.8),
+                  0 0 0 2px rgba(230, 190, 110, 0.4) inset;
+      border-color: rgba(230, 190, 110, 0.3);
+    }
+    
+    /* premium accent bar */
+    .luxury-accent {
+      height: 6px;
+      width: 100%;
+      background: linear-gradient(90deg, 
+        #c49a6c, #e8c48a, #f5e2b5, #e8c48a, #c49a6c, 
+        #dbb277, #f0d29c, #e2b87a, #b8874a);
+      background-size: 200% 100%;
+      animation: loginShimmerAccent 8s linear infinite;
+    }
+    
+    @keyframes loginShimmerAccent {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 200% 0%; }
+    }
+    
+    /* inner content area */
+    .card-inner {
+      padding: 2.8rem 2.5rem 3.2rem;
+    }
+    
+    /* BRANDING & LOGO */
+    .brand-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .logo-orb {
+      background: linear-gradient(145deg, rgba(210, 170, 100, 0.2), rgba(50, 35, 20, 0.4));
+      width: 96px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.2rem;
+      border-radius: 50%;
+      border: 1.5px solid rgba(230, 190, 110, 0.6);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 215, 140, 0.15) inset;
+      transition: var(--transition-smooth);
+    }
+    
+    .logo-orb:hover {
+      transform: scale(1.02);
+      border-color: rgba(240, 200, 120, 0.9);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .logo-orb i {
+      font-size: 3.2rem;
+      background: linear-gradient(135deg, #FFE8C8, #E5B56A);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+    }
+    
+    .brand-container h1 {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 2.4rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #FFF8EE, #FAD098);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      margin-bottom: 0.35rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .subhead {
+      color: var(--color-text-muted);
+      font-weight: 400;
+      font-size: 0.75rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      word-spacing: 3px;
+      opacity: 0.85;
+    }
+    
+    /* FORM FIELDS */
+    .field-group {
+      margin-bottom: 1.6rem;
+      position: relative;
+    }
+    
+    .field-icon {
+      position: absolute;
+      left: 1.3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.15rem;
+      color: #dbb879;
+      transition: var(--transition-smooth);
+      z-index: 3;
+      pointer-events: none;
+    }
+    
+    .input-luxury {
+      width: 100%;
+      padding: 1rem 1.2rem 1rem 3rem;
+      background: rgba(2, 8, 18, 0.75);
+      border: 1.5px solid rgba(200, 165, 100, 0.45);
+      border-radius: var(--border-radius-input);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--color-text-lux);
+      transition: var(--transition-smooth);
+      outline: none;
+      font-family: var(--font-sans);
+      letter-spacing: 0.2px;
+    }
+    
+    .input-luxury:focus {
+      border-color: var(--color-gold-primary);
+      background: rgba(5, 12, 24, 0.9);
+      box-shadow: 0 0 0 5px rgba(210, 170, 90, 0.2), 0 0 0 1px var(--color-gold-bright) inset;
+    }
+    
+    .input-luxury::placeholder {
+      color: #7c8fae;
+      font-weight: 400;
+      font-size: 0.85rem;
+    }
+    
+    .input-luxury:hover {
+      border-color: rgba(210, 175, 100, 0.7);
+    }
+    
+    /* Password toggle button */
+    .password-toggle-btn {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      padding-right: 0.75rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: #dbb879;
+      transition: var(--transition-smooth);
+      z-index: 3;
+    }
+    
+    .password-toggle-btn:hover {
+      color: var(--color-gold-bright);
+      transform: scale(1.05);
+    }
+    
+    /* OPTIONS ROW */
+    .options-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 1.4rem 0 2rem;
+      font-size: 0.85rem;
+    }
+    
+    .checkbox-premium {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbdaea;
+      cursor: pointer;
+      font-weight: 500;
+      transition: var(--transition-smooth);
+    }
+    
+    .checkbox-premium input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--color-gold-primary);
+      margin: 0;
+    }
+    
+    .checkbox-premium:hover {
+      color: #e8dbbc;
+    }
+    
+    .forgot-link {
+      color: var(--color-gold-bright);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition-smooth);
+      border-bottom: 1px dashed rgba(230, 190, 110, 0.5);
+      letter-spacing: 0.3px;
+    }
+    
+    .forgot-link:hover {
+      color: #ffe0b5;
+      border-bottom-color: var(--color-gold-bright);
+    }
+    
+    /* PRIMARY BUTTON */
+    .btn-luxury {
+      background: linear-gradient(115deg, #e8bc7c, #c68944, #e0aa64);
+      border: none;
+      width: 100%;
+      padding: 1rem;
+      border-radius: var(--border-radius-button);
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: var(--font-sans);
+      color: #0a0f1c;
+      letter-spacing: 1.2px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.5), 0 1px 0 0 rgba(255, 235, 170, 0.6) inset;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-luxury::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 245, 200, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn-luxury:hover::before {
+      left: 100%;
+    }
+    
+    .btn-luxury:hover {
+      background: linear-gradient(115deg, #f7cf95, #d69755, #f5c281);
+      transform: translateY(-2px);
+      box-shadow: 0 20px 32px -12px rgba(0, 0, 0, 0.7);
+      letter-spacing: 1.5px;
+    }
+    
+    .btn-luxury:active {
+      transform: translateY(1px);
+    }
+    
+    /* DIVIDER & SOCIAL AUTH */
+    .divider-stylish {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin: 2rem 0 1.2rem;
+    }
+    
+    .divider-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200, 175, 120, 0.5), rgba(220, 190, 130, 0.7), transparent);
+    }
+    
+    .divider-text {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: #b0c2e0;
+      text-transform: uppercase;
+    }
+    
+    .social-grid {
+      display: flex;
+      justify-content: center;
+      gap: 1.4rem;
+      margin-top: 0.8rem;
+    }
+    
+    .social-icon-premium {
+      background: rgba(18, 26, 40, 0.7);
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: #f0cf9b;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      border: 1px solid rgba(210, 175, 100, 0.5);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .social-icon-premium:hover {
+      background: linear-gradient(145deg, #dba357, #c68845);
+      color: #0a0f1c;
+      transform: translateY(-4px) scale(1.03);
+      border-color: #ffdead;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* SIGNUP PROMPT */
+    .signup-area {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #b1c3e2;
+    }
+    
+    .signup-link {
+      color: #f5d09a;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 2px dotted rgba(240, 195, 110, 0.6);
+      margin-left: 5px;
+      transition: var(--transition-smooth);
+    }
+    
+    .signup-link:hover {
+      color: #fff0ce;
+      border-bottom-color: #f5d09a;
+    }
+    
+    /* ANIMATIONS */
+    @keyframes loginCardReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(35px) scale(0.96);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .glass-card {
+      animation: loginCardReveal 0.65s cubic-bezier(0.2, 0.95, 0.4, 1.05) forwards;
+    }
+    
+    /* App badges */
+    .app-badges {
+      margin-top: 2rem;
+      text-align: center;
+    }
+    
+    .app-badges p {
+      font-size: 0.7rem;
+      color: #9aaec9;
+      margin-bottom: 0.5rem;
+    }
+    
+    .app-badge {
+      height: 2.5rem;
+      transition: all 0.3s ease;
+    }
+    
+    .app-badge:hover {
+      transform: translateY(-2px);
+    }
+    
+    /* responsive breakpoints */
+    @media (max-width: 600px) {
+      .card-inner {
+        padding: 1.8rem 1.5rem 2.2rem;
+      }
+      .brand-container h1 {
+        font-size: 1.8rem;
+      }
+      .btn-luxury {
+        padding: 0.85rem;
+      }
+      .logo-orb {
+        width: 75px;
+        height: 75px;
+      }
+      .logo-orb i {
+        font-size: 2.5rem;
+      }
+    }
+    
+    @media (max-width: 450px) {
+      .options-row {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Atmospheric background elements - scoped to login only -->
+<div class="login-particle-field"></div>
+<div class="login-orb login-orb-1"></div>
+<div class="login-orb login-orb-2"></div>
+<div class="login-orb login-orb-3"></div>
+<div class="login-scanline"></div>
+
+<div class="login-container-wrapper">
+    <div class="login-wrapper">
+        <div class="glass-card">
+            <div class="luxury-accent"></div>
+            <div class="card-inner">
+                
+                <div class="brand-container">
+                    <div class="logo-orb">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h1>PendoLink</h1>
+                    <div class="subhead">secure authentication gateway</div>
+                </div>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="field-group">
+                        <i class="fas fa-user field-icon"></i>
+                        <input type="text" id="username" name="username" class="input-luxury" 
+                               placeholder="Username or Email" required>
+                    </div>
+                    
+                    <div class="field-group">
+                        <i class="fas fa-lock field-icon"></i>
+                        <input type="password" id="password" name="password" class="input-luxury" 
+                               placeholder="Password" required>
+                        <button type="button" onclick="togglePassword()" class="password-toggle-btn">
+                            <i class="fas fa-eye" id="toggle-icon"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="options-row">
+                        <label class="checkbox-premium">
+                            <input type="checkbox" id="remember-me" name="remember-me">
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="forgot-link">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-luxury">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Sign in
+                    </button>
+                    
+                    <div class="divider-stylish">
+                        <div class="divider-line"></div>
+                        <span class="divider-text">Or continue with</span>
+                        <div class="divider-line"></div>
+                    </div>
+                    
+                    <div class="social-grid">
+                        <a href="#" onclick="socialLogin('google'); return false;" class="social-icon-premium">
+                            <i class="fab fa-google"></i>
+                        </a>
+                        <a href="#" onclick="socialLogin('facebook'); return false;" class="social-icon-premium">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </div>
+                    
+                    <div class="signup-area">
+                        Don't have an account?
+                        <a href="{% url 'register' %}" class="signup-link">Sign up</a>
+                    </div>
+                </form>
+                
+                <!-- App Download Badges -->
+                <div class="app-badges">
+                    <p>Get the app</p>
+                    <div style="display: flex; justify-content: center; gap: 0.5rem;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" class="app-badge" alt="Google Play">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="app-badge" alt="App Store">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// ORIGINAL FUNCTIONS - COMPLETELY UNCHANGED
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('toggle-icon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+function socialLogin(provider) {
+    window.location.href = `/auth/${provider}/login/`;
+}
+</script>
+{% endblock %}
+{% endblock %}

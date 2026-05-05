@@ -1,0 +1,609 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard - PendoLink{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       ADMIN DASHBOARD PREMIUM STYLING - MATCHING LOGIN PAGE
+       ================================================================== */
+    
+    /* Stats cards premium styling */
+    .stats-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1.5rem !important;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .stats-card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(230, 190, 110, 0.4);
+        box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Admin header premium styling */
+    .admin-header {
+        background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%) !important;
+        border-bottom: 2px solid rgba(230, 190, 110, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .admin-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357, #e6b87e);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    @keyframes shimmerHeader {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+    
+    /* Quick action cards */
+    .action-card {
+        background: rgba(15, 20, 35, 0.75) !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        transition: all 0.4s ease;
+    }
+    
+    .action-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(230, 190, 110, 0.4);
+        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Chart containers - properly sized */
+    .chart-container {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1.5rem !important;
+        padding: 1.5rem;
+    }
+    
+    .chart-container canvas {
+        max-height: 260px !important;
+        height: auto !important;
+    }
+    
+    /* Section headers */
+    .section-header {
+        color: #e6b87e !important;
+        border-left: 3px solid #e6b87e;
+        padding-left: 1rem;
+    }
+    
+    /* User list items */
+    .user-item, .report-item {
+        background: rgba(2, 8, 18, 0.5) !important;
+        border: 1px solid rgba(230, 190, 110, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .user-item:hover, .report-item:hover {
+        background: rgba(230, 184, 126, 0.08) !important;
+        border-color: rgba(230, 190, 110, 0.3);
+        transform: translateX(4px);
+    }
+    
+    /* System health cards */
+    .health-card {
+        background: rgba(2, 8, 18, 0.6) !important;
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .health-card:hover {
+        border-color: rgba(230, 190, 110, 0.4);
+        transform: scale(1.02);
+    }
+    
+    /* Match statistics bar */
+    .match-stats {
+        background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%) !important;
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .match-stats::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    /* Text colors premium */
+    .text-premium {
+        color: #e6b87e !important;
+    }
+    
+    .text-premium-bright {
+        color: #f7d5a3 !important;
+    }
+    
+    /* Badge styling */
+    .badge-verified {
+        background: rgba(16, 185, 129, 0.2) !important;
+        color: #10b981 !important;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .badge-unverified {
+        background: rgba(107, 114, 128, 0.2) !important;
+        color: #9ca3af !important;
+        border: 1px solid rgba(107, 114, 128, 0.3);
+    }
+    
+    /* Button inside dashboard */
+    .btn-review {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-review:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.3);
+    }
+    
+    /* Custom scrollbar for lists */
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(2, 8, 18, 0.5);
+        border-radius: 10px;
+    }
+    
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, #e6b87e, #b47c44);
+        border-radius: 10px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .stats-card {
+            padding: 1rem !important;
+        }
+        
+        .stats-card .text-3xl {
+            font-size: 1.5rem;
+        }
+        
+        .chart-container canvas {
+            max-height: 200px !important;
+        }
+        
+        .admin-header {
+            text-align: center;
+        }
+        
+        .flex-wrap {
+            justify-content: center;
+        }
+    }
+    
+    /* Chart.js container sizing fix */
+    canvas {
+        max-width: 100%;
+        height: auto !important;
+    }
+    
+    /* Loading state for charts */
+    .chart-loading {
+        position: relative;
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Admin Header -->
+    <div class="admin-header rounded-2xl p-8 text-white slide-in">
+        <div class="flex flex-wrap justify-between items-start gap-4">
+            <div>
+                <h1 class="text-3xl font-bold mb-2 font-serif">Admin Dashboard</h1>
+                <p class="text-premium-bright">Welcome back, {{ user.username }}! Here's your platform overview</p>
+            </div>
+            <div class="flex space-x-3 flex-wrap gap-3">
+                <span class="bg-white bg-opacity-10 px-4 py-2 rounded-lg flex items-center border border-premium">
+                    <i class="fas fa-calendar mr-2 text-premium"></i> {{ today|date:"F j, Y" }}
+                </span>
+                <a href="/admin/" class="bg-premium-gradient text-dark px-4 py-2 rounded-lg hover:bg-opacity-90 transition flex items-center font-semibold">
+                    <i class="fas fa-cog mr-2"></i> Django Admin
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="stats-card rounded-2xl p-6" data-aos="fade-up">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">Total Users</p>
+                    <p class="text-3xl font-bold text-premium">{{ total_users|default:"0" }}</p>
+                    <p class="text-xs text-green-500 mt-1">
+                        <i class="fas fa-arrow-up"></i> +{{ new_users_today|default:"0" }} today
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-premium bg-opacity-20 rounded-full flex items-center justify-center border border-premium">
+                    <i class="fas fa-users text-premium text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">Active Users (24h)</p>
+                    <p class="text-3xl font-bold text-premium">{{ active_users|default:"0" }}</p>
+                    <p class="text-xs text-gray-400 mt-1">{{ active_percentage|default:"0" }}% of total</p>
+                </div>
+                <div class="w-12 h-12 bg-green-500 bg-opacity-20 rounded-full flex items-center justify-center border border-green-500">
+                    <i class="fas fa-user-check text-green-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">Premium Subscribers</p>
+                    <p class="text-3xl font-bold text-premium">{{ premium_users|default:"0" }}</p>
+                    <p class="text-xs text-blue-400 mt-1">{{ conversion_rate|default:"0" }}% conversion</p>
+                </div>
+                <div class="w-12 h-12 bg-yellow-500 bg-opacity-20 rounded-full flex items-center justify-center border border-yellow-500">
+                    <i class="fas fa-crown text-yellow-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats-card rounded-2xl p-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-400 text-sm font-medium">Revenue (MTD)</p>
+                    <p class="text-3xl font-bold text-green-400">KES {{ revenue_mtd|default:"0" }}</p>
+                    <p class="text-xs text-green-500 mt-1">
+                        <i class="fas fa-chart-line"></i> +{{ revenue_growth|default:"0" }}% vs last month
+                    </p>
+                </div>
+                <div class="w-12 h-12 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center border border-red-500">
+                    <i class="fas fa-chart-line text-red-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" data-aos="fade-up">
+        <a href="/admin-panel/users/" class="action-card rounded-2xl p-6 transition group no-underline">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                        <i class="fas fa-users text-white text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-white">User Management</h3>
+                    <p class="text-gray-400 text-sm mt-1">Manage, verify, and moderate users</p>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400 group-hover:text-premium group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+        
+        <a href="/admin-panel/reports/" class="action-card rounded-2xl p-6 transition group no-underline">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                        <i class="fas fa-flag text-white text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-white">Reports</h3>
+                    <p class="text-gray-400 text-sm mt-1">{{ pending_reports|default:"0" }} pending reviews</p>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400 group-hover:text-premium group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+        
+        <a href="/admin-panel/analytics/" class="action-card rounded-2xl p-6 transition group no-underline">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition">
+                        <i class="fas fa-chart-line text-white text-xl"></i>
+                    </div>
+                    <h3 class="font-bold text-xl text-white">Analytics</h3>
+                    <p class="text-gray-400 text-sm mt-1">Deep insights and metrics</p>
+                </div>
+                <i class="fas fa-arrow-right text-gray-400 group-hover:text-premium group-hover:translate-x-1 transition"></i>
+            </div>
+        </a>
+    </div>
+    
+    <!-- Charts Row - Properly Sized -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="chart-container" data-aos="fade-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-white section-header">
+                    <i class="fas fa-chart-line text-premium mr-2"></i> User Growth
+                </h3>
+                <span class="text-xs text-gray-400">Last 7 days</span>
+            </div>
+            <canvas id="userGrowthChart" height="250" style="max-height: 250px;"></canvas>
+        </div>
+        
+        <div class="chart-container" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-white section-header">
+                    <i class="fas fa-dollar-sign text-premium mr-2"></i> Revenue Trends
+                </h3>
+                <span class="text-xs text-gray-400">Last 7 days</span>
+            </div>
+            <canvas id="revenueChart" height="250" style="max-height: 250px;"></canvas>
+        </div>
+    </div>
+    
+    <!-- Recent Activity -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Recent Users -->
+        <div class="chart-container" data-aos="fade-up">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-white section-header">
+                    <i class="fas fa-user-plus text-premium mr-2"></i> New Users
+                </h3>
+                <a href="/admin-panel/users/" class="text-premium text-sm hover:underline">View all →</a>
+            </div>
+            <div class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+                {% for user in recent_users %}
+                <div class="user-item flex items-center justify-between p-3 rounded-lg transition">
+                    <div class="flex items-center">
+                        <img src="{{ user.profile_picture|default:'https://ui-avatars.com/api/?name='|add:user.username|add:'&background=7C3AED&color=fff' }}" 
+                             class="w-10 h-10 rounded-full object-cover border border-premium">
+                        <div class="ml-3">
+                            <p class="font-medium text-white">{{ user.username }}</p>
+                            <p class="text-xs text-gray-400">{{ user.location|default:"Unknown" }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-400">{{ user.joined_at|timesince }} ago</p>
+                        <span class="text-xs px-2 py-1 rounded-full {% if user.is_verified %}badge-verified{% else %}badge-unverified{% endif %}">
+                            {% if user.is_verified %}Verified{% else %}Unverified{% endif %}
+                        </span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-8 text-gray-400">
+                    <i class="fas fa-user-check text-3xl mb-2 text-premium"></i>
+                    <p>No new users today</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Reports Queue -->
+        <div class="chart-container" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold text-white section-header">
+                    <i class="fas fa-flag text-premium mr-2"></i> Pending Reports
+                </h3>
+                <a href="/admin-panel/reports/" class="text-premium text-sm hover:underline">View all →</a>
+            </div>
+            <div class="space-y-3 max-h-96 overflow-y-auto custom-scrollbar">
+                {% for report in pending_reports_data %}
+                <div class="report-item flex items-center justify-between p-3 rounded-lg transition">
+                    <div class="flex-1">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-red-500 bg-opacity-20 rounded-full flex items-center justify-center border border-red-500">
+                                <i class="fas fa-flag text-red-400 text-sm"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="font-medium text-sm text-white">{{ report.reported_user.username }}</p>
+                                <p class="text-xs text-gray-400">Reported by {{ report.reported_by.username }}</p>
+                                <p class="text-xs text-red-400 mt-1">{{ report.get_reason_display }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/admin-panel/reports/{{ report.id }}/" class="btn-review px-3 py-1 rounded-lg text-sm transition">
+                        Review
+                    </a>
+                </div>
+                {% empty %}
+                <div class="text-center py-8 text-gray-400">
+                    <i class="fas fa-check-circle text-green-500 text-3xl mb-2"></i>
+                    <p>No pending reports</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- System Health -->
+    <div class="chart-container" data-aos="fade-up">
+        <h3 class="text-lg font-semibold text-white section-header mb-4">
+            <i class="fas fa-heartbeat text-premium mr-2"></i> System Health
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="health-card flex items-center justify-between p-4 rounded-xl">
+                <div>
+                    <p class="text-sm text-gray-400">API Response Time</p>
+                    <p class="text-2xl font-bold text-green-400">{{ api_response_time|default:"120" }}ms</p>
+                </div>
+                <i class="fas fa-tachometer-alt text-2xl text-gray-500"></i>
+            </div>
+            <div class="health-card flex items-center justify-between p-4 rounded-xl">
+                <div>
+                    <p class="text-sm text-gray-400">Uptime</p>
+                    <p class="text-2xl font-bold text-green-400">99.9%</p>
+                </div>
+                <i class="fas fa-server text-2xl text-gray-500"></i>
+            </div>
+            <div class="health-card flex items-center justify-between p-4 rounded-xl">
+                <div>
+                    <p class="text-sm text-gray-400">Active Sessions</p>
+                    <p class="text-2xl font-bold text-premium">{{ active_sessions|default:"0" }}</p>
+                </div>
+                <i class="fas fa-globe text-2xl text-gray-500"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Match Statistics -->
+    <div class="match-stats rounded-2xl p-6 text-white" data-aos="fade-up">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+            <div>
+                <h3 class="text-xl font-bold mb-2 font-serif">Match Statistics</h3>
+                <p class="text-premium-bright">Platform engagement metrics</p>
+            </div>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-premium">{{ total_matches|default:"0" }}</p>
+                    <p class="text-sm text-gray-400">Total Matches (30d)</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-premium">{{ active_subscriptions|default:"0" }}</p>
+                    <p class="text-sm text-gray-400">Active Subscriptions</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// User Growth Chart - Properly sized
+const userCtx = document.getElementById('userGrowthChart');
+if (userCtx) {
+    new Chart(userCtx, {
+        type: 'line',
+        data: {
+            labels: {{ user_growth_dates|safe }},
+            datasets: [{
+                label: 'New Users',
+                data: {{ user_growth_data|safe }},
+                borderColor: '#e6b87e',
+                backgroundColor: 'rgba(230, 184, 126, 0.1)',
+                borderWidth: 2,
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#e6b87e',
+                pointBorderColor: '#0a0e1a',
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#cbdaea' }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: '#1a1a3e',
+                    titleColor: '#e6b87e',
+                    bodyColor: '#cbdaea',
+                    borderColor: '#e6b87e',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(203, 218, 234, 0.1)' },
+                    ticks: { color: '#cbdaea' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#cbdaea' }
+                }
+            }
+        }
+    });
+}
+
+// Revenue Chart - Properly sized
+const revenueCtx = document.getElementById('revenueChart');
+if (revenueCtx) {
+    new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ revenue_dates|safe }},
+            datasets: [{
+                label: 'Revenue (KES)',
+                data: {{ revenue_data|safe }},
+                backgroundColor: '#e6b87e',
+                borderRadius: 8,
+                borderWidth: 0,
+                barPercentage: 0.7,
+                categoryPercentage: 0.8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#cbdaea' }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'KES ' + context.raw.toLocaleString();
+                        }
+                    },
+                    backgroundColor: '#1a1a3e',
+                    titleColor: '#e6b87e',
+                    bodyColor: '#cbdaea',
+                    borderColor: '#e6b87e',
+                    borderWidth: 1
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: 'rgba(203, 218, 234, 0.1)' },
+                    ticks: {
+                        color: '#cbdaea',
+                        callback: function(value) {
+                            return 'KES ' + value.toLocaleString();
+                        }
+                    }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#cbdaea' }
+                }
+            }
+        }
+    });
+}
+</script>
+{% endblock %}
+{% endblock %}

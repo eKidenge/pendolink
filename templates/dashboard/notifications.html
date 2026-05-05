@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - PendoLink{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden" data-aos="fade-up">
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-white">Notifications</h1>
+                    <p class="text-purple-100 text-sm">Stay updated with your activity</p>
+                </div>
+                <button onclick="markAllAsRead()" class="bg-white text-purple-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-100">
+                    Mark all as read
+                </button>
+            </div>
+        </div>
+        
+        <div class="divide-y divide-gray-100">
+            {% for notification in notifications %}
+            <div class="notification-item p-6 hover:bg-gray-50 transition {% if not notification.is_read %}bg-purple-50{% endif %}" 
+                 data-notification-id="{{ notification.id }}">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center">
+                            <i class="fas {% if notification.notification_type == 'match' %}fa-heart{% elif notification.notification_type == 'message' %}fa-comment{% elif notification.notification_type == 'like' %}fa-thumbs-up{% else %}fa-bell{% endif %} text-white text-xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-semibold text-gray-800">{{ notification.title }}</h3>
+                                <p class="text-gray-600 mt-1">{{ notification.message }}</p>
+                                <p class="text-xs text-gray-400 mt-2">
+                                    <i class="far fa-clock mr-1"></i> {{ notification.created_at|timesince }} ago
+                                </p>
+                            </div>
+                            <div class="flex space-x-2">
+                                {% if not notification.is_read %}
+                                <button onclick="markAsRead({{ notification.id }})" class="text-purple-600 text-sm">
+                                    Mark read
+                                </button>
+                                {% endif %}
+                                <button onclick="deleteNotification({{ notification.id }})" class="text-red-600 text-sm">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {% if notification.data.action_url %}
+                        <div class="mt-3">
+                            <a href="{{ notification.data.action_url }}" class="inline-flex items-center text-purple-600 text-sm font-semibold hover:text-purple-700">
+                                View details <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="text-center py-12">
+                <i class="fas fa-bell-slash text-6xl text-gray-300 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-600">No notifications</h3>
+                <p class="text-gray-500 mt-2">You're all caught up!</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Pagination -->
+        {% if notifications.has_other_pages %}
+        <div class="px-6 py-4 border-t border-gray-200">
+            <div class="flex justify-center space-x-2">
+                {% if notifications.has_previous %}
+                <a href="?page={{ notifications.previous_page_number }}" class="px-3 py-1 border rounded-lg">Previous</a>
+                {% endif %}
+                {% for num in notifications.paginator.page_range %}
+                    <a href="?page={{ num }}" class="px-3 py-1 border rounded-lg {% if notifications.number == num %}bg-purple-600 text-white{% endif %}">
+                        {{ num }}
+                    </a>
+                {% endfor %}
+                {% if notifications.has_next %}
+                <a href="?page={{ notifications.next_page_number }}" class="px-3 py-1 border rounded-lg">Next</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+function markAsRead(notificationId) {
+    fetch(`/api/notifications/${notificationId}/read/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'marked as read') {
+            const notification = document.querySelector(`.notification-item[data-notification-id="${notificationId}"]`);
+            notification.classList.remove('bg-purple-50');
+            const button = notification.querySelector('button');
+            if (button) button.remove();
+        }
+    });
+}
+
+function markAllAsRead() {
+    fetch('/api/notifications/mark-all-read/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        location.reload();
+    });
+}
+
+function deleteNotification(notificationId) {
+    if (confirm('Delete this notification?')) {
+        fetch(`/api/notifications/${notificationId}/delete/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrftoken
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const notification = document.querySelector(`.notification-item[data-notification-id="${notificationId}"]`);
+                notification.remove();
+            }
+        });
+    }
+}
+</script>
+{% endblock %}
+{% endblock %}

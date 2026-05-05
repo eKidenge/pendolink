@@ -1,0 +1,643 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard - PendoLink{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ==================================================================
+       USER DASHBOARD PREMIUM STYLING - VERY SERIOUS & PROFESSIONAL
+       ================================================================== */
+    
+    /* Welcome section premium styling */
+    .welcome-section {
+        background: linear-gradient(135deg, #1a1a3e 0%, #0f0f1a 100%) !important;
+        border-bottom: 2px solid rgba(230, 190, 110, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .welcome-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3, #dba357, #e6b87e);
+        background-size: 200% 100%;
+        animation: shimmerHeader 3s linear infinite;
+    }
+    
+    @keyframes shimmerHeader {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+    
+    .welcome-section h1 {
+        font-family: 'Playfair Display', serif;
+        letter-spacing: -0.5px;
+    }
+    
+    /* Stats cards inside welcome section */
+    .stat-card-glass {
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(230, 190, 110, 0.2);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .stat-card-glass:hover {
+        background: rgba(255, 255, 255, 0.12) !important;
+        border-color: rgba(230, 190, 110, 0.4);
+        transform: translateY(-2px);
+    }
+    
+    .stat-card-glass .text-2xl {
+        color: #e6b87e !important;
+    }
+    
+    /* Premium button styling */
+    .btn-premium {
+        background: linear-gradient(115deg, #e8bc7c, #c68944, #e0aa64) !important;
+        color: #0a0f1c !important;
+        font-weight: 700 !important;
+        transition: all 0.3s ease !important;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 245, 200, 0.4), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .btn-premium:hover::before {
+        left: 100%;
+    }
+    
+    .btn-premium:hover {
+        transform: scale(1.05) !important;
+        box-shadow: 0 10px 25px -8px rgba(230, 184, 126, 0.4);
+    }
+    
+    /* Section headers */
+    .section-header {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .section-header::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #e6b87e, #f7d5a3);
+        border-radius: 3px;
+    }
+    
+    /* Match cards premium styling */
+    .match-card-premium {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1.5rem !important;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    .match-card-premium:hover {
+        transform: translateY(-6px);
+        border-color: rgba(230, 190, 110, 0.4);
+        box-shadow: 0 25px 40px -12px rgba(0, 0, 0, 0.5);
+    }
+    
+    .match-card-premium h3 {
+        color: #e6b87e !important;
+    }
+    
+    .match-card-premium .text-gray-600 {
+        color: #9aaec9 !important;
+    }
+    
+    /* Match score badge */
+    .match-score-badge {
+        background: linear-gradient(135deg, #e6b87e, #dba357) !important;
+        color: #0a0f1c !important;
+        font-weight: 700;
+        box-shadow: 0 2px 10px rgba(230, 184, 126, 0.3);
+    }
+    
+    /* Interest tags */
+    .interest-tag {
+        background: rgba(230, 184, 126, 0.15) !important;
+        color: #e6b87e !important;
+        border: 1px solid rgba(230, 184, 126, 0.3);
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+    }
+    
+    /* Like and Pass buttons */
+    .btn-like {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-like:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(230, 184, 126, 0.4);
+    }
+    
+    .btn-pass {
+        background: rgba(2, 8, 18, 0.75) !important;
+        border: 1.5px solid rgba(200, 165, 100, 0.45) !important;
+        color: #e6b87e !important;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-pass:hover {
+        background: rgba(230, 184, 126, 0.15) !important;
+        border-color: #e6b87e !important;
+        transform: scale(1.02);
+    }
+    
+    .btn-info {
+        background: rgba(230, 184, 126, 0.1) !important;
+        border: 1px solid rgba(230, 184, 126, 0.3) !important;
+        color: #e6b87e !important;
+    }
+    
+    .btn-info:hover {
+        background: rgba(230, 184, 126, 0.2) !important;
+        transform: scale(1.05);
+    }
+    
+    /* Recent matches styling */
+    .recent-match-card {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1rem !important;
+        transition: all 0.3s ease;
+    }
+    
+    .recent-match-card:hover {
+        border-color: rgba(230, 190, 110, 0.4);
+        transform: translateX(4px);
+    }
+    
+    .compatibility-badge {
+        background: rgba(230, 184, 126, 0.2) !important;
+        color: #e6b87e !important;
+        border: 1px solid rgba(230, 184, 126, 0.3);
+    }
+    
+    .btn-message {
+        background: linear-gradient(115deg, #e8bc7c, #c68944) !important;
+        color: #0a0f1c !important;
+        font-weight: 600;
+    }
+    
+    .btn-message:hover {
+        transform: scale(1.02);
+    }
+    
+    /* Activity feed styling */
+    .activity-feed {
+        background: rgba(15, 20, 35, 0.85) !important;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(230, 190, 110, 0.15);
+        border-radius: 1.5rem !important;
+        overflow: hidden;
+    }
+    
+    .activity-item {
+        background: transparent !important;
+        border-bottom: 1px solid rgba(230, 190, 110, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .activity-item:hover {
+        background: rgba(230, 184, 126, 0.05) !important;
+        padding-left: 0.5rem;
+    }
+    
+    .activity-icon {
+        background: linear-gradient(135deg, #1a1a3e, #0f0f1a) !important;
+        border: 1px solid rgba(230, 190, 110, 0.3);
+    }
+    
+    .activity-icon i {
+        color: #e6b87e !important;
+    }
+    
+    /* Empty states */
+    .empty-state {
+        background: rgba(15, 20, 35, 0.85) !important;
+        border: 1px dashed rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem;
+        padding: 3rem;
+        text-align: center;
+    }
+    
+    .empty-state i {
+        color: #e6b87e;
+        opacity: 0.5;
+    }
+    
+    .empty-state p {
+        color: #9aaec9;
+    }
+    
+    /* Online status indicator */
+    .online-indicator {
+        background: rgba(16, 185, 129, 0.2);
+        border: 1px solid #10b981;
+        border-radius: 9999px;
+        padding: 0.25rem 0.75rem;
+        backdrop-filter: blur(4px);
+    }
+    
+    .online-dot {
+        width: 8px;
+        height: 8px;
+        background: #10b981;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    /* Image overlay gradient */
+    .image-overlay {
+        background: linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.7) 100%);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .stat-card-glass .text-2xl {
+            font-size: 1.25rem;
+        }
+        
+        .stat-card-glass .text-sm {
+            font-size: 0.7rem;
+        }
+        
+        .match-card-premium .p-6 {
+            padding: 1rem;
+        }
+        
+        .btn-like, .btn-pass {
+            padding: 0.5rem;
+            font-size: 0.75rem;
+        }
+    }
+    
+    /* Dark scrollbar for activity feed */
+    .activity-feed .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    
+    /* Modal styling (if needed) */
+    .modal-premium {
+        background: rgba(15, 20, 35, 0.95) !important;
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(230, 190, 110, 0.3);
+        border-radius: 1.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Welcome Section -->
+    <div class="welcome-section rounded-2xl p-8 text-white slide-in">
+        <div class="flex flex-wrap justify-between items-start gap-4">
+            <div>
+                <h1 class="text-3xl font-bold mb-2">Welcome back, {{ user.username }}!</h1>
+                <p class="text-premium-bright">Find your perfect match today with AI-powered recommendations</p>
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    <div class="stat-card-glass rounded-xl p-4">
+                        <div class="text-2xl font-bold text-premium">{{ matches_count|default:"0" }}</div>
+                        <div class="text-sm text-gray-300">Matches</div>
+                    </div>
+                    <div class="stat-card-glass rounded-xl p-4">
+                        <div class="text-2xl font-bold text-premium">{{ likes_received|default:"0" }}</div>
+                        <div class="text-sm text-gray-300">Likes Received</div>
+                    </div>
+                    <div class="stat-card-glass rounded-xl p-4">
+                        <div class="text-2xl font-bold text-premium">{{ profile_views|default:"0" }}</div>
+                        <div class="text-sm text-gray-300">Profile Views</div>
+                    </div>
+                    <div class="stat-card-glass rounded-xl p-4">
+                        <div class="text-2xl font-bold text-premium">{{ compatibility_score|default:"0" }}%</div>
+                        <div class="text-sm text-gray-300">Avg Match Score</div>
+                    </div>
+                </div>
+            </div>
+            
+            {% if not user.is_premium %}
+            <div class="hidden md:block">
+                <a href="{% url 'subscription' %}" class="btn-premium px-6 py-3 rounded-xl font-semibold inline-flex items-center">
+                    <i class="fas fa-crown mr-2"></i>
+                    Upgrade to Premium
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Today's Recommendations -->
+    <div data-aos="fade-up">
+        <div class="flex flex-wrap justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-white section-header">✨ Today's AI Recommendations</h2>
+                <p class="text-gray-400 mt-2">Based on your interests and personality</p>
+            </div>
+            <a href="{% url 'discover' %}" class="text-premium hover:text-premium-bright font-semibold transition">
+                View All <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for recommendation in recommendations %}
+            <div class="match-card-premium rounded-2xl" data-aos="fade-up" data-aos-delay="{{ forloop.counter|stringformat:'d' }}">
+                <div class="relative">
+                    <img src="{{ recommendation.profile_picture|default:'https://via.placeholder.com/400x500' }}" 
+                         alt="{{ recommendation.username }}" 
+                         class="w-full h-64 object-cover">
+                    
+                    <!-- Image overlay gradient -->
+                    <div class="image-overlay absolute inset-0"></div>
+                    
+                    <!-- Match Score Badge -->
+                    <div class="absolute top-4 right-4 match-score-badge rounded-full px-3 py-1 text-sm font-semibold">
+                        {{ recommendation.match_score }}% Match
+                    </div>
+                    
+                    <!-- Online Status -->
+                    {% if recommendation.is_online %}
+                    <div class="absolute bottom-4 left-4 online-indicator flex items-center">
+                        <div class="online-dot"></div>
+                        <span class="ml-2 text-white text-sm font-semibold">Online</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="text-xl font-bold text-premium">{{ recommendation.username }}, {{ recommendation.age }}</h3>
+                            <p class="text-gray-400 text-sm">
+                                <i class="fas fa-map-marker-alt mr-1"></i> {{ recommendation.distance }} km away
+                            </p>
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            {% for interest in recommendation.top_interests|slice:":2" %}
+                            <span class="interest-tag">{{ interest }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-400 text-sm mt-2 line-clamp-2">{{ recommendation.bio|truncatechars:100 }}</p>
+                    
+                    <div class="flex space-x-3 mt-4">
+                        <button onclick="likeUser({{ recommendation.id }})" 
+                                class="btn-like flex-1 py-2 rounded-xl transition transform hover:scale-105 font-semibold">
+                            <i class="fas fa-heart mr-2"></i> Like
+                        </button>
+                        <button onclick="passUser({{ recommendation.id }})" 
+                                class="btn-pass flex-1 py-2 rounded-xl transition font-semibold">
+                            <i class="fas fa-times mr-2"></i> Pass
+                        </button>
+                        <button onclick="showProfileModal({{ recommendation.id }})" 
+                                class="btn-info px-4 py-2 rounded-xl transition">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state col-span-full">
+                <i class="fas fa-users text-6xl mb-4 block"></i>
+                <h3 class="text-xl font-semibold text-white mb-2">No recommendations yet</h3>
+                <p class="text-gray-400">Complete your profile to get AI-powered matches!</p>
+                <a href="{% url 'edit-profile' %}" class="btn-premium inline-block mt-4 px-6 py-2 rounded-xl font-semibold">
+                    Complete Profile
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Recent Matches -->
+    <div data-aos="fade-up">
+        <div class="flex flex-wrap justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-white section-header">💑 Your Matches</h2>
+                <p class="text-gray-400 mt-2">People who liked you back</p>
+            </div>
+            <a href="{% url 'matches' %}" class="text-premium hover:text-premium-bright font-semibold transition">
+                View All <i class="fas fa-arrow-right ml-1"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for match in recent_matches %}
+            <div class="recent-match-card rounded-2xl overflow-hidden">
+                <div class="flex p-4">
+                    <img src="{{ match.profile_picture|default:'https://via.placeholder.com/80' }}" 
+                         alt="{{ match.username }}" 
+                         class="w-20 h-20 rounded-full object-cover border-2 border-premium">
+                    <div class="ml-4 flex-1">
+                        <div class="flex flex-wrap justify-between items-start gap-2">
+                            <div>
+                                <h3 class="font-bold text-lg text-white">{{ match.username }}</h3>
+                                <p class="text-gray-400 text-sm">{{ match.age }} years • {{ match.distance }} km</p>
+                            </div>
+                            <span class="compatibility-badge text-xs px-2 py-1 rounded-full">
+                                {{ match.compatibility }}% Match
+                            </span>
+                        </div>
+                        <div class="flex space-x-2 mt-3">
+                            <a href="{% url 'chat' match.conversation_id %}" 
+                               class="btn-message flex-1 text-center py-2 rounded-lg transition font-semibold">
+                                <i class="fas fa-comment"></i> Message
+                            </a>
+                            <button onclick="viewProfile({{ match.id }})" 
+                                    class="btn-info px-4 py-2 rounded-lg transition">
+                                <i class="fas fa-user"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state col-span-full">
+                <i class="fas fa-heart-broken text-6xl mb-4 block"></i>
+                <p class="text-gray-400">No matches yet. Start liking profiles!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Activity Feed -->
+    <div data-aos="fade-up">
+        <h2 class="text-2xl font-bold text-white section-header mb-6">📊 Recent Activity</h2>
+        <div class="activity-feed rounded-2xl overflow-hidden">
+            <div class="divide-y divide-gray-800">
+                {% for activity in activities %}
+                <div class="activity-item flex flex-wrap items-center p-4 transition">
+                    <div class="activity-icon w-12 h-12 rounded-full flex items-center justify-center">
+                        <i class="fas {% if activity.type == 'like' %}fa-heart{% elif activity.type == 'match' %}fa-handshake{% else %}fa-comment{% endif %} text-lg"></i>
+                    </div>
+                    <div class="ml-4 flex-1">
+                        <p class="text-white">{{ activity.message }}</p>
+                        <p class="text-gray-500 text-sm">{{ activity.time_ago }}</p>
+                    </div>
+                    {% if activity.action_url %}
+                    <a href="{{ activity.action_url }}" class="text-premium hover:text-premium-bright transition ml-4">
+                        View <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="empty-state m-4">
+                    <i class="fas fa-bell text-4xl mb-3 block"></i>
+                    <p class="text-gray-400">No recent activity</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+// Show loading notification
+function showLoading() {
+    const loader = document.getElementById('global-loader');
+    if (loader) loader.style.display = 'flex';
+}
+
+function hideLoading() {
+    const loader = document.getElementById('global-loader');
+    if (loader) loader.style.display = 'none';
+}
+
+// Like user function
+function likeUser(userId) {
+    showLoading();
+    fetch(`/api/matching/like/${userId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showNotification('success', 'You liked this profile!');
+            if (data.is_match) {
+                showNotification('success', 'It\'s a match! 🎉');
+                setTimeout(() => {
+                    window.location.href = `/chat/${data.conversation_id}/`;
+                }, 2000);
+            }
+        } else {
+            showNotification('error', data.error || 'Failed to like');
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showNotification('error', 'Network error. Please try again.');
+    });
+}
+
+// Pass user function
+function passUser(userId) {
+    showLoading();
+    fetch(`/api/matching/pass/${userId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        if (data.success) {
+            showNotification('info', 'You passed on this profile');
+            // Find and remove the card
+            const card = event.target.closest('.match-card-premium');
+            if (card) card.remove();
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        showNotification('error', 'Network error. Please try again.');
+    });
+}
+
+// Show notification
+function showNotification(type, message) {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 right-4 z-50 rounded-lg shadow-xl p-4 max-w-md slide-in border-l-4 transition-all duration-300 ${
+        type === 'success' ? 'border-green-500' : type === 'error' ? 'border-red-500' : 'border-premium'
+    }`;
+    notification.style.background = 'rgba(15, 20, 35, 0.95)';
+    notification.style.backdropFilter = 'blur(12px)';
+    notification.style.border = `1px solid rgba(230, 190, 110, 0.2)`;
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} 
+                ${type === 'success' ? 'text-green-500' : type === 'error' ? 'text-red-500' : 'text-premium'} text-lg"></i>
+            </div>
+            <div class="ml-3">
+                <p class="text-sm text-gray-200">${message}</p>
+            </div>
+            <button class="ml-auto text-gray-400 hover:text-gray-300 transition" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        if (notification) notification.remove();
+    }, 5000);
+}
+
+// Placeholder functions (implement as needed)
+function showProfileModal(userId) {
+    showNotification('info', 'Profile details coming soon!');
+}
+
+function viewProfile(userId) {
+    window.location.href = `/profile/${userId}/`;
+}
+</script>
+{% endblock %}
+{% endblock %}

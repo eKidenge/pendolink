@@ -4,8 +4,6 @@ Django settings for pendolink project.
 
 from pathlib import Path
 from django.contrib import messages
-import os
-from decouple import config
 
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,8 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-c+nuf8awg&1!$=s8!p*z-3$&16+hbwv&f#ld#5h3osbm^*$mr='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = True
+
 ALLOWED_HOSTS = [
     'pendolink.onrender.com',
     'localhost',
@@ -56,22 +54,12 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-
-    # WhiteNoise (IMPORTANT for Render static files)
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
-
     'corsheaders.middleware.CorsMiddleware',
-
     'django.middleware.common.CommonMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
-
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -158,7 +146,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-#STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
 

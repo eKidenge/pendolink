@@ -1,26 +1,24 @@
 Django>=5.0,<6.0
 
-# Core dependencies from your settings
+# Core dependencies
 djangorestframework>=3.15
 django-cors-headers>=4.3
 channels>=4.0
 
-# Database (upgrade later from SQLite → PostgreSQL)
+# Database (SQLite now, PostgreSQL later)
 psycopg2-binary>=2.9
 
-# Image handling (likely for profiles)
+# Media / Images
 Pillow>=10.0
 
-# Environment variables (you SHOULD use this)
+# Environment variables
 python-decouple>=3.8
 
 # Production server
 gunicorn>=22.0
 
-# Static files serving in production
+# Static files handling (Render)
 whitenoise>=6.6
 
-# Optional but VERY useful (dev tools)
+# Optional dev tools
 django-extensions>=3.2
-gunicorn>=22.0
-whitenoise>=6.6

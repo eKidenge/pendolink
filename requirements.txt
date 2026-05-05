@@ -1,0 +1,24 @@
+Django>=5.0,<6.0
+
+# Core dependencies from your settings
+djangorestframework>=3.15
+django-cors-headers>=4.3
+channels>=4.0
+
+# Database (upgrade later from SQLite → PostgreSQL)
+psycopg2-binary>=2.9
+
+# Image handling (likely for profiles)
+Pillow>=10.0
+
+# Environment variables (you SHOULD use this)
+python-decouple>=3.8
+
+# Production server
+gunicorn>=22.0
+
+# Static files serving in production
+whitenoise>=6.6
+
+# Optional but VERY useful (dev tools)
+django-extensions>=3.2
